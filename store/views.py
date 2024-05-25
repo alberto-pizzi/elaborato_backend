@@ -7,3 +7,6 @@ def index(request):
 
 def goto_login(request):
     return redirect('accounts:login')
+
+def goto_signup(request):
+    return redirect('accounts:sign-up')
