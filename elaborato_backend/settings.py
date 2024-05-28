@@ -29,6 +29,11 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+# Session
+# 30 minutes of inactivity
+SESSION_EXPIRE_SECONDS = 1800
+SESSION_COOKIE_AGE = SESSION_EXPIRE_SECONDS
+
 
 # Application definition
 
