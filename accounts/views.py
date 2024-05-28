@@ -1,8 +1,20 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 
 # Create your views here.
 from .models import CustomUser
+from django.contrib.auth import authenticate,login
 def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        pass1 = request.POST.get('password')
+        user = authenticate(request, username=username, password=pass1)
+        if user is not None:
+            login(request, user)
+            return redirect('store:home')
+        else:
+            #FIXME improve error message
+            return HttpResponse("Username or Password is incorrect!!!")
+
     return render(request, 'accounts/login.html')
 
 def signup_view(request):
@@ -34,4 +46,5 @@ def signup_view(request):
         user_profile.save()
 
         return redirect('login')
+
     return render(request, 'accounts/sign-up.html')
