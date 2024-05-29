@@ -156,12 +156,10 @@
     
   <header class="p-3 text-bg-dark">
     <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-        </a>
+      <div class="d-flex flex-wrap align-items-center justify-content-between">
 
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+
+        <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
           <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
           <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
@@ -169,13 +167,19 @@
           <li><a href="#" class="nav-link px-2 text-white">About</a></li>
         </ul>
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+      
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 flex-grow-1 mx-4" role="search">
           <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
         </form>
+      <div class="d-flex justify-content-between align-items-center">
           {% if user.is_authenticated %}
             <div class="dropdown text-end">
           <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              Hi, {{ user.first_name }}!
+              {% if user.first_name %}
+                Hi, {{ user.first_name }}!
+              {% else %}
+                Hi, {{ user.username }}!
+              {% endif %}
           </a>
           <ul class="dropdown-menu text-small" style="">
             <li><a class="dropdown-item" href="#">Orders</a></li>
@@ -190,10 +194,30 @@
               <button type="button" class="btn btn-outline-light me-2">Login</button>
             </a>
             <a href="{% url 'sign-up' %}">
-                <button type="button" class="btn btn-warning">Sign-up</button>
+                <button type="button" class="btn btn-warning me-4">Sign-up</button>
             </a>
         </div>
           {% endif %}
+      
+<div class="d-flex justify-content-center align-items-center rounded bg-primary p-2">
+    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart" class="d-flex justify-content-center text-decoration-none align-items-center" style="width: 100%; height: 100%;">
+        <svg class="fs-4 position-relative d-block me-1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+            <path d="m0 0h24v24h-24z" fill="#fff" opacity="0"/>
+            <g fill="#231f20">
+                <path d="m21.08 7a2 2 0 0 0 -1.7-1h-12.8l-.58-2.26a1 1 0 0 0 -1-.74h-2a1 1 0 0 0 0 2h1.24l2.76 10.26a1 1 0 0 0 1 .74h9a1 1 0 0 0 .89-.55l3.28-6.56a2 2 0 0 0 -.09-1.89z"/>
+                <circle cx="7.5" cy="19.5" r="1.5"/>
+                <circle cx="17.5" cy="19.5" r="1.5"/>
+            </g>
+        </svg>
+        <span class="ml-1 fw-bold text-dark">
+            01 Items
+        </span>
+    </a>
+</div>
+
+
+
+      </div>
       </div>
     </div>
   </header>
