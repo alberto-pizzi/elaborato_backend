@@ -5,7 +5,6 @@ $('.add-to-cart-button').click(function (e){
    console.log("Product ID: ", product_id);
    let product_qty = 1;
    let token = $('input[name=csrfmiddlewaretoken]').val();
-
    $.ajax({
        method: "POST",
        url: "order/add-to-cart",
@@ -14,11 +13,18 @@ $('.add-to-cart-button').click(function (e){
            'product_qty': product_qty,
            csrfmiddlewaretoken: token
        },
-       dataType: "dataType",
+       dataType: "json",
        success: function (response){
-            console.log('response',response)
-            alertify.success(response.status)
-       }
+
+            if (response.total_items !== undefined) {
+                $('#cart-total').text('Cart (' + response.total_items + ')');
+            } else {
+                console.error('Error: total items not found into response');
+            }
+       },
+       error: function(xhr, status, error) {
+        console.error('Error during AJAX request:', status, error);
+    }
    });
 
 });

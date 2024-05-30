@@ -33,25 +33,12 @@ def addToCart(request):
         product = get_object_or_404(Product, id=prod_id)
         cart = get_or_create_cart(request)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+        total_items = cart.total_items()
 
-        if request.user.is_authenticated:
-            if not created:
-                cart_item.quantity += 1
-                cart_item.save()
-                messages.success(request, 'Quantità del prodotto aggiornata nel carrello.')
-                print("Quantità del prodotto aggiornata nel carrello")
-            else:
-                messages.success(request, 'Prodotto aggiunto al carrello.')
-                print("Prodotto aggiunto al carrello")
-
-            print("Prodotto aggiunto/aggiornato nel carrello 1 ")
-            return JsonResponse({'status': 'success', 'message': 'Prodotto aggiunto/aggiornato nel carrello.'})
-        else:
-
-            if not created:
-                cart_item.quantity += 1
-                cart_item.save()
-            print("Prodotto aggiunto/aggiornato nel carrello 2")
-            return JsonResponse({'status': 'success', 'message': 'Prodotto aggiunto/aggiornato nel carrello.'})
+        # TODO consider anonymous user's cart
+        return JsonResponse({'status': 'success', 'message': 'Prodotto aggiunto/aggiornato nel carrello.', 'total_items': total_items})
     print("Invalid request method")
     return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)
