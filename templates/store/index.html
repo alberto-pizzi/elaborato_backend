@@ -173,7 +173,7 @@
         </form>
       <div class="d-flex justify-content-between align-items-center">
           {% if user.is_authenticated %}
-            <div class="dropdown text-end">
+            <div class="dropdown text-end me-4">
           <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
               {% if user.first_name %}
                 Hi, {{ user.first_name }}!
@@ -210,7 +210,7 @@
             </g>
         </svg>
         <span class="ml-1 fw-bold text-dark">
-            01 Items
+            Cart ({{ total_items }})
         </span>
     </a>
 </div>
@@ -244,16 +244,19 @@
 
       <!-- TODO connect buttons with database-->
           {% for product in products %}
-            <div class="col">
+            <div class="col product_data">
+            {% csrf_token %}
+            <input type="hidden" value="{{ product.id }}" class="prod_id">
           <div class="card shadow-sm">
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
             <div class="card-body">
-              <h2 class="name-article">{{ product.name }}</h2>
+              <h2 class="name-article">{{ product.name }} </h2>
               <span class="price">{{ product.price }} $</span>
                 <div class="d-flex justify-content-between align-items-center">
 
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-primary add-to-cart-button">Add to cart</button>
+                    <button type="button" class="btn btn-sm btn-outline-primary add-to-cart-button">Add to cart</button>
+                    
                   <button type="button" class="btn btn-sm btn-outline-secondary add-to-favourites">
 
                     <svg class="favourite-icon" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -266,10 +269,13 @@
 
                   </button>
                 </div>
-                <div class="cart-options">
-                    <div class="article-quantity">3</div>
-                    <button type="button" class="btn btn-sm btn-outline-primary remove-from-cart">Remove</button>
-                </div>
+                {% if product.id in cart_product_ids %}
+                    <div class="cart-options">
+                    <!-- FIXME add dynamic quantity -->
+                        <div class="article-quantity">0</div>
+                        <button type="button" class="btn btn-sm btn-outline-primary remove-from-cart">Remove</button>
+                    </div>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -292,6 +298,7 @@
   </div>
 </footer>
 <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="{% static 'assets/dist/js/store.js' %}"></script>
     </body>
 </html>
