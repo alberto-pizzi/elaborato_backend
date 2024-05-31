@@ -15,10 +15,10 @@ class Cart(models.Model):
     def __str__(self):
         return f'Cart ({self.user})' if self.user else f'Cart ({self.session_id})'
 
-    def totalItems(self):
+    def total_items(self):
         return sum(item.quantity for item in self.cartitem_set.all())
 
-    def totalPrice(self):
+    def total_price(self):
         total = 0
         for item in self.cartitem_set.all():
             total += item.quantity * item.product.price

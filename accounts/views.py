@@ -1,9 +1,11 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render, redirect, HttpResponse
 
 # Create your views here.
 from .models import CustomUser
-from django.contrib.auth import authenticate,login,logout
-def loginView(request):
+from django.contrib.auth import authenticate, login, logout
+
+
+def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         pass1 = request.POST.get('password')
@@ -12,12 +14,13 @@ def loginView(request):
             login(request, user)
             return redirect('store:home')
         else:
-            #FIXME improve error message
+            # FIXME improve error message
             return HttpResponse("Username or Password is incorrect!!!")
 
     return render(request, 'accounts/login.html')
 
-def signupView(request):
+
+def signup_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -48,6 +51,7 @@ def signupView(request):
         return redirect('login')
 
     return render(request, 'accounts/sign-up.html')
+
 
 def logout_view(request):
     logout(request)
