@@ -36,3 +36,6 @@ def gotoLogin(request):
 
 def gotoSignup(request):
     return redirect('accounts:sign-up')
+
+def gotoCart(request):
+    return redirect('order:cart-overview')
