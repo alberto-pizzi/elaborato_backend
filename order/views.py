@@ -5,6 +5,7 @@ from order.models import Cart,CartItem
 from django.http import JsonResponse
 import uuid
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -61,3 +62,6 @@ def remove_from_cart(request):
         return JsonResponse(
             {'status': 'success', 'message': 'Prodotto aggiunto/aggiornato nel carrello.', 'total_items': total_items,
              'cart_item_quantity': cart_item.quantity})
+
+
+
