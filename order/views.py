@@ -13,6 +13,9 @@ from django.contrib import messages
 def checkout(request):
     return render(request, 'order/checkout.html')
 
+def cart_overview(request):
+    return render(request, 'order/cart.html')
+
 
 def get_or_create_cart(request):
     if request.user.is_authenticated:
