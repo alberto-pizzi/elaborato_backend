@@ -10,12 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 from django.contrib import messages
-def checkout(request):
-    return render(request, 'order/checkout.html')
-
-def cart_overview(request):
-    return render(request, 'order/cart.html')
-
 
 def get_or_create_cart(request):
     if request.user.is_authenticated:
@@ -66,5 +60,25 @@ def remove_from_cart(request):
             {'status': 'success', 'message': 'Prodotto aggiunto/aggiornato nel carrello.', 'total_items': total_items,
              'cart_item_quantity': cart_item.quantity})
 
+def checkout(request):
+    return render(request, 'order/checkout.html')
 
+def cart_overview(request):
+    # TODO inserire le variabili da passare al template
+    cart = get_or_create_cart(request)
 
+    products = Product.objects.all().values('id', 'name', 'price', 'stock')
+    cart_items = CartItem.objects.filter(cart=cart).select_related('product')
+
+    cart_products = [
+        {
+            'product_id': item.product.id,
+            'name': item.product.name,
+            'price': item.product.price,
+            'quantity': item.quantity
+        } for item in cart_items
+    ]
+
+    return render(request, 'order/cart.html', {'cart_products': cart_products,
+                                               'total_items': cart.total_items(),
+                                               'total_price': cart.total_price()})

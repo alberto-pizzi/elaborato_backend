@@ -31,11 +31,11 @@ def index(request):
         'total_price': cart.total_price(),
     })
 
-def gotoLogin(request):
+def goto_login(request):
     return redirect('accounts:login')
 
-def gotoSignup(request):
+def goto_signup(request):
     return redirect('accounts:sign-up')
 
-def gotoCart(request):
+def goto_cart(request):
     return redirect('order:cart-overview')
