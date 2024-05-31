@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect,HttpResponse
 # Create your views here.
 from .models import CustomUser
 from django.contrib.auth import authenticate,login,logout
-def login_view(request):
+def loginView(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         pass1 = request.POST.get('password')
@@ -17,7 +17,7 @@ def login_view(request):
 
     return render(request, 'accounts/login.html')
 
-def signup_view(request):
+def signupView(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')

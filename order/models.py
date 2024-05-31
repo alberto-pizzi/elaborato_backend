@@ -10,14 +10,15 @@ class Cart(models.Model):
     session_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_paid = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Cart ({self.user})' if self.user else f'Cart ({self.session_id})'
 
-    def total_items(self):
+    def totalItems(self):
         return sum(item.quantity for item in self.cartitem_set.all())
 
-    def total_price(self):
+    def totalPrice(self):
         total = 0
         for item in self.cartitem_set.all():
             total += item.quantity * item.product.price
