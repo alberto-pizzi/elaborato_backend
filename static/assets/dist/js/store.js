@@ -24,6 +24,7 @@ function toggleCartOptions(response, add_button){
     }
 }
 
+//TODO review this code
 $('.add-to-cart-button').click(function (e){
    e.preventDefault();
 

@@ -100,6 +100,7 @@
     
     <!-- Custom styles for this template -->
     <link href="{%  static 'assets/dist/css/checkout.css' %}" rel="stylesheet">
+    <link href="{%  static 'assets/dist/css/store.css' %}" rel="stylesheet">
   </head>
   <body class="bg-body-tertiary">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -172,10 +173,16 @@
 
             {% for cart_product in cart_products %}
                 <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">{{ cart_product.name }}</h6>
-                <!-- TODO add product format (size..) -->
-              <small class="text-body-secondary">Brief description</small>
+            <div class="d-flex">
+                <!-- FIXME margin div button-->
+                <div class="align-content-center d-block mr-3">
+                    <button type="button" class="btn btn-sm btn-outline-primary remove-from-cart">Del</button>
+                </div>
+                <div>
+                  <h6 class="my-0">{{ cart_product.name }}</h6>
+                    <!-- TODO add product format (size..) -->
+                  <small class="text-body-secondary">Brief description</small>
+                </div>
             </div>
             <span class="text-body-secondary">
                 {% if cart_product.quantity > 1 %}
@@ -198,8 +205,12 @@
 
 
           <li class="list-group-item d-flex justify-content-between fw-bold">
-            <span>Total (USD)</span>
-            <strong>{{ total_price }} $</strong>
+              {% if total_items > 0 %}
+                <span>Total (USD)</span>
+                <strong>{{ total_price }} $</strong>
+              {% else %}
+                <span>Cart is empty</span>
+              {% endif %}
           </li>
         </ul>
 

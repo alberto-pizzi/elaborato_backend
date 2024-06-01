@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from store.models import Product
-from order.models import Cart,CartItem
+from store.models import Product, ProductVariant
+from order.models import Cart, CartItem
 from django.http import JsonResponse
 import uuid
 from django.shortcuts import get_object_or_404
@@ -64,10 +64,9 @@ def checkout(request):
     return render(request, 'order/checkout.html')
 
 def cart_overview(request):
-    # TODO inserire le variabili da passare al template
     cart = get_or_create_cart(request)
 
-    products = Product.objects.all().values('id', 'name', 'price', 'stock')
+    products = ProductVariant.objects.all()
     cart_items = CartItem.objects.filter(cart=cart).select_related('product')
 
     cart_products = [
