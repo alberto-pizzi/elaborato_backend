@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect,get_object_or_404
 
 from order.models import Cart
 # Create your views here.
-from .models import Product, ProductVariant
+from .models import Product, ProductVariant, Category
 from order.views import get_or_create_cart
 from order.models import CartItem
 
@@ -58,10 +58,12 @@ def product_detail(request, id):
 def store_view(request, gen):
     #FIXME
     products = ProductVariant.objects.select_related('product').all().order_by('-product__date_added')
+    categories = Category.objects.all()
 
-    products_data = {
+    data = {
         'products': products,
-        'gender': gen
+        'gender': gen,
+        'categories': categories
     }
 
-    return render(request, 'store/store.html', products_data | header_data(request))
+    return render(request, 'store/store.html', data | header_data(request))

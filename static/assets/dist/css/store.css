@@ -69,3 +69,7 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.fit-content{
+    width: fit-content;
+}

@@ -11,13 +11,13 @@
 {% block categories %}
   <section class="pt-3 pb-5 text-center container">
         <div class="row pb-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
+      <div class="mx-auto">
           <!-- FIXME
         <h1 class="fw-light mb-1">gender</h1>
         -->
 
         <nav aria-label="breadcrumb">
-    <ol class="breadcrumb breadcrumb-chevron p-1 bg-body-tertiary rounded-3 justify-content-center">
+    <ol class="breadcrumb breadcrumb-chevron p-1 bg-body-tertiary rounded-3 justify-content-center ">
       <li class="breadcrumb-item">
         <a class="link-body-emphasis fw-semibold text-decoration-none" href="{% url 'store:home' %}">Home</a>
       </li>
@@ -32,9 +32,31 @@
     </ol>
   </nav>
 
+          <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
+      <div class="container-fluid justify-content-center">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse d-lg-flex justify-content-center" id="navbarsExample11">
+          <ul class="navbar-nav col-lg-6 justify-content-lg-center">
+
+            {% for category in categories %}
+                <li class="nav-item">
+                    <!-- FIXME connect with url-->
+                    <a class="nav-link" href="#">{{ category.name }}</a>
+                </li>
+            {% endfor %}
+          </ul>
+
+        </div>
+      </div>
+    </nav>
 
 
       </div>
     </div>
   </section>
 {% endblock categories %}
+
+<!-- TODO implement results-->
