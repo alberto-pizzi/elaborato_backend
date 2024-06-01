@@ -1,0 +1,40 @@
+{% extends 'store/index.html' %}
+{% load static %}
+
+{% block styles %}
+<link href="{%  static 'assets/dist/css/breadcrumbs.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+<link href="{%  static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+{% endblock styles %}
+
+
+{% block categories %}
+  <section class="pt-3 pb-5 text-center container">
+        <div class="row pb-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+          <!-- FIXME
+        <h1 class="fw-light mb-1">gender</h1>
+        -->
+
+        <nav aria-label="breadcrumb">
+    <ol class="breadcrumb breadcrumb-chevron p-1 bg-body-tertiary rounded-3 justify-content-center">
+      <li class="breadcrumb-item">
+        <a class="link-body-emphasis fw-semibold text-decoration-none" href="{% url 'store:home' %}">Home</a>
+      </li>
+        <!-- FIXME
+      <li class="breadcrumb-item">
+        <a class="link-body-emphasis fw-semibold text-decoration-none" href="">Libraty</a>
+      </li>
+      -->
+      <li class="breadcrumb-item active" aria-current="page">
+          {{ gender }}
+      </li>
+    </ol>
+  </nav>
+
+
+
+      </div>
+    </div>
+  </section>
+{% endblock categories %}
