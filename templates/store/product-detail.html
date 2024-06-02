@@ -17,38 +17,49 @@
         <p class="">Gender: {{ product.product.gender }}</p>
 
         <div class="d-flex">
-
-        <!-- FIXME fix front-end and data visualized -->
-
-        <div class="mb-3 fit-content">
-            <label for="exampleSelect" class="form-label">Available sizes: </label>
-            <select class="form-select " id="exampleSelect">
-              <option selected="">Select size</option>
-                {% for size in sizes %}
-                    <option value="1">{{ size.size__size_name }}</option>
-                {% endfor %}
-            </select>
-          </div>
-
-        <div class="mb-3 fit-content">
-            <label for="exampleSelect" class="form-label">Available colors: </label>
-            <select class="form-select " id="exampleSelect">
-              <option selected="">Select color</option>
-                {% for color in colors %}
-                    <option value="1">{{ color.color__color_name }}</option>
-                {% endfor %}
-            </select>
-          </div>
+        
+            <div class="mb-3 me-5 fit-content">
+                <label for="select-quantity" class="form-label">Quantity: </label>
+                <select class="form-select " id="select-quantity">
+                  <option selected="" value="1">1</option>
+                    {% for i in quantities %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                    <option value="20+">20+</option>
+                </select>
+                <input class="form-control d-none" type="number" id="select-quantity" min="20">
+              </div>
+            <div class="mb-3 me-3 fit-content">
+                <label for="select-size" class="form-label">Available sizes: </label>
+                <select class="form-select " id="select-size">
+                  
+                    {% for size in sizes %}
+                        <option value="1">{{ size.size__size_name }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+    
+            <div class="mb-3 me-3 fit-content">
+                <label for="select-color" class="form-label">Available colors: </label>
+                <select class="form-select " id="select-color">
+                    {% for color in colors %}
+                        <option value="1">{{ color.color__color_name }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+        
+            
+        
 
         </div>
 
-        <div class="align-content-center display-5 fw-bold lh-1 text-body-emphasis mb-4">
+        <div class="align-content-center display-6 fw-bold lh-1 text-body-emphasis mb-4">
             {{ product.price }} $
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-between mb-4 mb-lg-3">
             <div class="d-flex ">
-          <button type="button" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Add to Cart</button>
+          <button type="button" class="btn btn-primary btn-lg px-4 me-2 fw-bold">Add to Cart</button>
           <button type="button" class="btn btn-outline-secondary btn-lg px-4">Add to favourites</button>
             </div>
 
@@ -61,3 +72,7 @@
     </div>
 
 {% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'assets/dist/js/product-detail.js' %}"></script>
+{% endblock scripts %}

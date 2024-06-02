@@ -70,13 +70,14 @@ def product_detail(request, gen, category, id):
         'category_slug': category,
         'category_name': category.capitalize(),
         'sizes': sizes,
-        'colors': colors
+        'colors': colors,
+        'quantities': [i+1 for i in range(1,19,1)]
     }
 
     return render(request, 'store/product-detail.html', data | header_data(request))
 
 def store_view(request, gen):
-    products = ProductVariant.objects.select_related('product').filter(product__gender=gen)
+    products = ProductVariant.objects.select_related('product').filter(Q(product__gender=gen) | Q(product__gender='Unisex'))
 
     data = {
         'products': products,

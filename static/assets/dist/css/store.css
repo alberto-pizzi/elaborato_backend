@@ -73,3 +73,7 @@
 .fit-content{
     width: fit-content;
 }
+
+.width-50px{
+    width: 40px;
+}
