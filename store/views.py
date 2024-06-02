@@ -5,6 +5,7 @@ from order.models import Cart
 from .models import Product, ProductVariant, Category
 from order.views import get_or_create_cart
 from order.models import CartItem
+from django.db.models import Q
 
 
 def header_data(request):
@@ -56,8 +57,24 @@ def product_detail(request, id):
     return render(request, 'store/product-detail.html', {'product': product} | header_data(request))
 
 def store_view(request, gen):
-    #FIXME
-    products = ProductVariant.objects.select_related('product').all().order_by('-product__date_added')
+    products = ProductVariant.objects.select_related('product').filter(product__gender=gen)
+    categories = Category.objects.all()
+
+    data = {
+        'products': products,
+        'gender': gen,
+        'categories': categories
+    }
+
+    return render(request, 'store/store.html', data | header_data(request))
+
+
+def category_view(request, gen, category):
+    if gen == 'Kid' or gen == 'kid':
+        products = ProductVariant.objects.select_related('product__category', 'product').filter(
+            Q(product__category__category_slug=category) & Q(product__gender=gen))
+    else:
+        products = ProductVariant.objects.select_related('product__category', 'product').filter(Q(product__category__category_slug=category) & (Q(product__gender=gen) | Q(product__gender='Unisex')) )
     categories = Category.objects.all()
 
     data = {
