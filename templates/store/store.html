@@ -21,14 +21,23 @@
       <li class="breadcrumb-item">
         <a class="link-body-emphasis fw-semibold text-decoration-none" href="{% url 'store:home' %}">Home</a>
       </li>
-        <!-- FIXME
-      <li class="breadcrumb-item">
-        <a class="link-body-emphasis fw-semibold text-decoration-none" href="">Libraty</a>
+        <!-- TODO optimize breadcrumb-->
+
+     <li class="breadcrumb-item">
+        <a class="link-body-emphasis fw-semibold text-decoration-none" href="{% url 'store:gender-store' gen=gender %}">{{ gender }}</a>
       </li>
-      -->
-      <li class="breadcrumb-item active" aria-current="page">
-          {{ gender }}
-      </li>
+
+        {% if category_name %}
+            <li class="breadcrumb-item">
+                <a class="link-body-emphasis fw-semibold text-decoration-none" href="{% url 'store:category' gen=gender category=category_slug %}">{{ category_name }}</a>
+              </li>
+        {% endif %}
+
+    {% block breadcrumb %}{% endblock breadcrumb %}
+
+
+
+
     </ol>
   </nav>
 

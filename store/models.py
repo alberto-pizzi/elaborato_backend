@@ -51,7 +51,7 @@ class Product(models.Model):
 class Image(models.Model):
     name = models.CharField(max_length=50, blank=True)
     product=models.ForeignKey(Product, on_delete=models.CASCADE)
-    image = models.ImageField(blank=True, upload_to='images/')
+    image = models.ImageField(blank=True, upload_to='static/images/')
 
     def __str__(self):
         return self.name
@@ -72,7 +72,7 @@ class ProductVariant(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        name = self.product.name
+        name = self.product.name + ' ' + self.product.gender
         if self.color:
             name += ' ' + self.color.color_name
         if self.size:

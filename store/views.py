@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect,get_object_or_404
 
 from order.models import Cart
 # Create your views here.
-from .models import Product, ProductVariant, Category
+from .models import Product, ProductVariant, Category, Size
 from order.views import get_or_create_cart
 from order.models import CartItem
 from django.db.models import Q
@@ -22,13 +22,15 @@ def header_data(request):
     ]
 
     cart_product_ids = [item['product_id'] for item in cart_products]
+    categories = Category.objects.all()
 
     data = {
         'cart_products': cart_products,
         'cart_product_ids': cart_product_ids,
         'total_items': cart.total_items(),
         'total_price': cart.total_price(),
-        'genders': [gender[0] for gender in Product.GENDERS]
+        'genders': [gender[0] for gender in Product.GENDERS],
+        'categories': categories
     }
     return data
 
@@ -52,18 +54,33 @@ def goto_signup(request):
 def goto_cart(request):
     return redirect('order:cart-overview')
 
-def product_detail(request, id):
+def product_detail(request, gen, category, id):
     product = get_object_or_404(ProductVariant, id=id)
-    return render(request, 'store/product-detail.html', {'product': product} | header_data(request))
+    base_product_id = product.product.id
+    sizes = (ProductVariant.objects.filter(product_id=base_product_id).select_related('product', 'size')
+             .values('size__size_name').distinct())
+
+    colors = (ProductVariant.objects.filter(product_id=base_product_id).select_related('product', 'color')
+             .values('color__color_name').distinct())
+
+    #FIXME optimize redondancy
+    data = {
+        'product': product,
+        'gender': gen,
+        'category_slug': category,
+        'category_name': category.capitalize(),
+        'sizes': sizes,
+        'colors': colors
+    }
+
+    return render(request, 'store/product-detail.html', data | header_data(request))
 
 def store_view(request, gen):
     products = ProductVariant.objects.select_related('product').filter(product__gender=gen)
-    categories = Category.objects.all()
 
     data = {
         'products': products,
         'gender': gen,
-        'categories': categories
     }
 
     return render(request, 'store/store.html', data | header_data(request))
@@ -75,12 +92,13 @@ def category_view(request, gen, category):
             Q(product__category__category_slug=category) & Q(product__gender=gen))
     else:
         products = ProductVariant.objects.select_related('product__category', 'product').filter(Q(product__category__category_slug=category) & (Q(product__gender=gen) | Q(product__gender='Unisex')) )
-    categories = Category.objects.all()
 
     data = {
         'products': products,
         'gender': gen,
-        'categories': categories
+        'category_slug': category,
+        'category_name': category.capitalize()
+
     }
 
     return render(request, 'store/store.html', data | header_data(request))
