@@ -43,7 +43,6 @@ def add_to_cart(request):
             cart_item.quantity += quantity
         cart_item.save()
         total_items = cart.total_items()
-        print("ID: ", product.id," Quantity: ",cart_item.quantity, "Total: ",total_items)
         # TODO consider anonymous user's cart
         
         return JsonResponse({'status': 'success', 'message': 'Prodotto aggiunto/aggiornato nel carrello.',
@@ -57,19 +56,18 @@ def add_to_cart(request):
 def remove_from_cart(request):
     if request.method == 'POST':
         prod_id = int(request.POST.get('product_id'))
-        product = get_object_or_404(Product, id=prod_id)
+        product = get_object_or_404(ProductVariant, id=prod_id)
         cart = get_or_create_cart(request)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
-        cart_item.quantity -= 1
-        cart_item.save()
-        if cart_item.quantity <= 0:
-            cart_item.delete()
+        cart_item.delete()
 
         total_items = cart.total_items()
+        total_price = cart.total_price()
         return JsonResponse(
             {'status': 'success', 'message': 'Prodotto aggiunto/aggiornato nel carrello.', 'total_items': total_items,
-             'cart_item_quantity': cart_item.quantity})
+             'cart_item_quantity': cart_item.quantity, 'total_price': total_price})
+    return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)
 
 def checkout(request):
     return render(request, 'order/checkout.html')
@@ -83,9 +81,11 @@ def cart_overview(request):
     cart_products = [
         {
             'product_id': item.product.id,
-            'name': item.product.name,
+            'name': item.product.title,
             'price': item.product.price,
-            'quantity': item.quantity
+            'quantity': item.quantity,
+            'size': item.product.size.size_name,
+            'color': item.product.color.color_name
         } for item in cart_items
     ]
 

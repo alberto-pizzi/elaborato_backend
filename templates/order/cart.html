@@ -164,24 +164,31 @@
     </div>
 
     <div class="row g-5">
-      <div class="order-md-last">
+        {% block content %}
+            <div class="order-md-last">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-primary">Your cart</span>
-          <span class="badge bg-primary rounded-pill">{{ total_items }}</span>
+          <span class="badge bg-primary rounded-pill" id="total-items">{{ total_items }}</span>
         </h4>
+        <input type="hidden" id="remove-from-cart" value="{% url 'order:remove-from-cart' %}">
         <ul class="list-group mb-3">
 
+
             {% for cart_product in cart_products %}
-                <li class="list-group-item d-flex justify-content-between lh-sm">
+                <div class="product_data">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
             <div class="d-flex">
+                {% csrf_token %}
+
+                <input type="hidden" class="prod_id" value="{{ cart_product.product_id }}">
                 <!-- FIXME margin div button-->
-                <div class="align-content-center d-block mr-3">
+                <div class="align-content-center d-block">
                     <button type="button" class="btn btn-sm btn-outline-primary remove-from-cart">Del</button>
                 </div>
-                <div>
+                <div class="mx-3">
                   <h6 class="my-0">{{ cart_product.name }}</h6>
                     <!-- TODO add product format (size..) -->
-                  <small class="text-body-secondary">Brief description</small>
+                  <small class="text-body-secondary">Size: {{ cart_product.size }} Color: {{ cart_product.color }}</small>
                 </div>
             </div>
             <span class="text-body-secondary">
@@ -191,6 +198,7 @@
                 {{ cart_product.price }} $
             </span>
           </li>
+                </div>
             {% endfor %}
 
             <!-- TODO add coupon sale
@@ -207,7 +215,9 @@
           <li class="list-group-item d-flex justify-content-between fw-bold">
               {% if total_items > 0 %}
                 <span>Total (USD)</span>
-                <strong>{{ total_price }} $</strong>
+                  <div>
+                  <strong id="total-price">{{ total_price }}</strong><strong> $</strong>
+                  </div>
               {% else %}
                 <span>Cart is empty</span>
               {% endif %}
@@ -221,6 +231,7 @@
           </div>
         </form>
       </div>
+        {% endblock content %}
     </div>
   </main>
 
@@ -235,5 +246,12 @@
 </div>
 <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
 
-    <script src="{% static  'assets/dist/js/checkout.js' %}"></script></body>
+<script src="{% static  'assets/dist/js/checkout.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+{% block scripts %}
+    <script src="{% static  'assets/dist/js/cart.js' %}"></script>
+{% endblock scripts %}
+</body>
+
+
 </html>
