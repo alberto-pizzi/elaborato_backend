@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect,get_object_or_404
 
 from order.models import Cart
 # Create your views here.
-from .models import Product, ProductVariant, Category, Size
+from .models import Product, ProductVariant, Category, Size, Color
 from order.views import get_or_create_cart
 from order.models import CartItem
 from django.db.models import Q
+from django.db.models import Subquery
 
 
 def header_data(request):
@@ -14,10 +15,10 @@ def header_data(request):
     cart_items = CartItem.objects.filter(cart=cart).select_related('product')
     cart_products = [
         {
-            'product_id': item.id,
-            'name': item.name,
-            'price': item.price,
-            'quantity': item.quantity
+            'product_id': item.product.id,
+            'name': item.product.title,
+            'price': item.product.price,
+            'quantity': item.product.quantity
         } for item in cart_items
     ]
 
@@ -57,11 +58,12 @@ def goto_cart(request):
 def product_detail(request, gen, category, id):
     product = get_object_or_404(ProductVariant, id=id)
     base_product_id = product.product.id
-    sizes = (ProductVariant.objects.filter(product_id=base_product_id).select_related('product', 'size')
-             .values('size__size_name').distinct())
 
-    colors = (ProductVariant.objects.filter(product_id=base_product_id).select_related('product', 'color')
-             .values('color__color_name').distinct())
+    product_sizes = (ProductVariant.objects.filter(product_id=base_product_id).values('size_id').distinct())
+    sizes = Size.objects.filter(id__in=product_sizes).all()
+
+    product_colors = (ProductVariant.objects.filter(product_id=base_product_id).values('color_id').distinct())
+    colors = Color.objects.filter(id__in=product_colors).all()
 
     #FIXME optimize redondancy
     data = {
@@ -71,7 +73,7 @@ def product_detail(request, gen, category, id):
         'category_name': category.capitalize(),
         'sizes': sizes,
         'colors': colors,
-        'quantities': [i+1 for i in range(1,19,1)]
+        'quantities': [i+1 for i in range(1, 19, 1)]
     }
 
     return render(request, 'store/product-detail.html', data | header_data(request))

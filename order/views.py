@@ -27,22 +27,33 @@ def get_or_create_cart(request):
 
 def add_to_cart(request):
     if request.method == 'POST':
+
         prod_id = int(request.POST.get('product_id'))
-        product = get_object_or_404(Product, id=prod_id)
+        quantity = int(request.POST.get('product_qty'))
+        size = str(request.POST.get('product_size'))
+        color = str(request.POST.get('product_color'))
+
+        product = get_object_or_404(ProductVariant, product=prod_id, size=size, color=color)
         cart = get_or_create_cart(request)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        if not created:
-            cart_item.quantity += 1
-            cart_item.save()
+
+        if created:
+            cart_item.quantity = quantity
+        else:
+            cart_item.quantity += quantity
+        cart_item.save()
         total_items = cart.total_items()
-        print("ID: ", prod_id," Quantity: ",cart_item.quantity)
+        print("ID: ", product.id," Quantity: ",cart_item.quantity, "Total: ",total_items)
         # TODO consider anonymous user's cart
+        
         return JsonResponse({'status': 'success', 'message': 'Prodotto aggiunto/aggiornato nel carrello.',
                              'total_items': total_items, 'cart_item_quantity': cart_item.quantity})
+
     print("Invalid request method")
     return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)
 
 
+# FIXME fix remove function
 def remove_from_cart(request):
     if request.method == 'POST':
         prod_id = int(request.POST.get('product_id'))
