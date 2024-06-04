@@ -52,7 +52,6 @@ def add_to_cart(request):
     return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)
 
 
-# FIXME fix remove function
 def remove_from_cart(request):
     if request.method == 'POST':
         prod_id = int(request.POST.get('product_id'))

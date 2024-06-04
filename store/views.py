@@ -6,12 +6,12 @@ from .models import Product, ProductVariant, Category, Size, Color
 from order.views import get_or_create_cart
 from order.models import CartItem
 from django.db.models import Q
+from django.http import JsonResponse
 from django.db.models import Subquery
 
 
 def header_data(request):
     cart = get_or_create_cart(request)
-    # FIXME review if product or product_variant
     cart_items = CartItem.objects.filter(cart=cart).select_related('product')
     cart_products = [
         {
@@ -55,15 +55,52 @@ def goto_signup(request):
 def goto_cart(request):
     return redirect('order:cart-overview')
 
+
+def exclude_sizes(prod_id,prod_color_id):
+    product_out_of_stock = ProductVariant.objects.filter(product_id=prod_id, color_id=prod_color_id, quantity=0).all()
+
+    sizes_by_product = ProductVariant.objects.filter(product_id=prod_id).values_list('size_id', flat=True).distinct()
+
+    sizes_by_color = (ProductVariant.objects.filter(product_id=prod_id, color_id=prod_color_id)
+                      .values_list('size_id', flat=True).distinct())
+
+    sizes_not_found = set(sizes_by_product) - set(sizes_by_color)
+    sizes_not_found_list = [i for i in sizes_not_found]
+    sizes_out_of_stock_list = [i.size_id for i in product_out_of_stock]
+
+    sizes_to_exclude = list(set(sizes_out_of_stock_list + sizes_not_found_list))
+
+    return sizes_to_exclude
+
+def update_product_info(request):
+    if request.method == 'POST':
+        prod_id = int(request.POST.get('prod_id'))
+        prod_color_id = int(request.POST.get('product_color_id'))
+
+        new_price = ProductVariant.objects.filter(product_id=prod_id, color_id=prod_color_id).first()
+        new_price = new_price.price
+
+        data_response = {
+            'sizes_out_of_stock': exclude_sizes(prod_id,prod_color_id),
+            'new_price': new_price
+        }
+        return JsonResponse({'status': 'success', 'message': 'JSON Success'} | data_response)
+    return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)
+
+
+
+
 def product_detail(request, gen, category, id):
     product = get_object_or_404(ProductVariant, id=id)
     base_product_id = product.product.id
 
+    product_colors = (ProductVariant.objects.filter(product_id=base_product_id).values('color_id').distinct())
+    colors = Color.objects.filter(id__in=product_colors).all()
+
     product_sizes = (ProductVariant.objects.filter(product_id=base_product_id).values('size_id').distinct())
     sizes = Size.objects.filter(id__in=product_sizes).all()
 
-    product_colors = (ProductVariant.objects.filter(product_id=base_product_id).values('color_id').distinct())
-    colors = Color.objects.filter(id__in=product_colors).all()
+
 
     #FIXME optimize redondancy
     data = {
@@ -73,7 +110,8 @@ def product_detail(request, gen, category, id):
         'category_name': category.capitalize(),
         'sizes': sizes,
         'colors': colors,
-        'quantities': [i+1 for i in range(1, 19, 1)]
+        'quantities': [i+1 for i in range(1, 19, 1)],
+        'blocked_sizes': exclude_sizes(base_product_id,product.color),
     }
 
     return render(request, 'store/product-detail.html', data | header_data(request))

@@ -27,7 +27,6 @@ $('.remove-from-cart').click(function (e){
        url: ajax_url,
        data: {
            'product_id': product_id,
-           'product_qty': product_qty,
            csrfmiddlewaretoken: token
        },
        dataType: "json",

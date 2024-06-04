@@ -23,6 +23,21 @@ function getProductQuantity(){
     }
 }
 
+
+function updateSizes(response){
+    $('.size-selector').prop('disabled',false);
+    response.sizes_out_of_stock.forEach(function (item){
+        let sizeId = 'size_' + item
+        console.log('size id for: ', response.sizes_out_of_stock);
+        document.getElementById(sizeId).disabled = true;
+    });
+}
+
+function updateProductPrice(response){
+    $('#product-price').text(response.new_price);
+    console.log('cambio prezzo');
+}
+
 document.getElementById('select-quantity').addEventListener('change', function() {
     let moreQuantityInput = document.querySelector('input#select-quantity')
     if (this.value === '20+') {
@@ -33,6 +48,39 @@ document.getElementById('select-quantity').addEventListener('change', function()
         moreQuantityInput.classList.add('d-none');
         moreQuantityInput.classList.remove('d-block');
     }
+});
+
+document.getElementById('select-color').addEventListener('change', function() {
+    let product_id = $(this).closest('.product_data').find('.prod_id').val();
+    let product_color = $('select#select-color').val();
+
+    let token = $('input[name=csrfmiddlewaretoken]').val();
+
+    let ajax_url = $('#update-product-url').val();
+
+    //let size_selected = $('input[name="size"]:checked').val();
+
+   $.ajax({
+       method: "POST",
+       url: ajax_url,
+       data: {
+           'prod_id': product_id,
+           'product_color_id': product_color,
+           //'product_size_id_selected': size_selected,
+           csrfmiddlewaretoken: token
+       },
+       dataType: "json",
+       success: function (response){
+           console.log('ritorno successo');
+           updateSizes(response);
+           updateProductPrice(response);
+           //toggleCartOptions(response, addButton);
+       },
+       error: getAjaxErrorMessage
+   });
+
+
+
 });
 
 

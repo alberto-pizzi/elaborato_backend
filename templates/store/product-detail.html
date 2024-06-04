@@ -33,23 +33,44 @@
                 <input class="form-control d-none" type="number" id="select-quantity" min="20">
               </div>
             <div class="mb-3 me-3 fit-content">
-                <label for="select-size" class="form-label">Available sizes: </label>
-                <select class="form-select " id="select-size">
-                  
-                    {% for size in sizes %}
-                        <option value="{{ size.id }}">{{ size.size_name }}</option>
-                    {% endfor %}
-                </select>
-              </div>
-    
-            <div class="mb-3 me-3 fit-content">
                 <label for="select-color" class="form-label">Available colors: </label>
                 <select class="form-select " id="select-color">
                     {% for color in colors %}
+                        {% if product.color.id == color.id %}
+                        <option selected="" value="{{ color.id }}">{{ color.color_name }}</option>
+                        {% else %}
                         <option value="{{ color.id }}">{{ color.color_name }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
               </div>
+        
+        <!--
+            <div class="mb-3 me-3 fit-content">
+                <label for="select-size" class="form-label">Available sizes: </label>
+                <select class="form-select " id="select-size">
+                  
+
+                </select>
+              </div>
+              
+              -->
+            <input type="hidden" value="{% url 'store:update-product' %}" id="update-product-url">
+            <div class="fit-content d-flex align-items-center btn-group mx-4 flex-wrap">
+                
+                
+                {% for size in sizes %}
+                    {% if size.id in blocked_sizes  %}
+                        <input type="radio" class="btn-check size-selector" name="size" id="size_{{ size.id }}" value="{{ size.id }}" autocomplete="off" disabled>
+                    {% else %}
+                        <input type="radio" class="btn-check size-selector" name="size" id="size_{{ size.id }}" value="{{ size.id }}" autocomplete="off">
+                    {% endif %}
+                        <label class="btn btn-secondary" for="size_{{ size.id }}">{{ size.size_name }}</label>
+                {% endfor %}
+                
+              </div>
+    
+            
         
             
         
@@ -57,7 +78,7 @@
         </div>
 
         <div class="align-content-center display-6 fw-bold lh-1 text-body-emphasis mb-4">
-            {{ product.price }} $
+             <span id="product-price">{{ product.price }}</span> <span> $</span>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-between mb-4 mb-lg-3">
