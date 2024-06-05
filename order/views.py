@@ -26,29 +26,32 @@ def get_or_create_cart(request):
 
 
 def add_to_cart(request):
+    # TODO add "one size" feature
     if request.method == 'POST':
 
         prod_id = int(request.POST.get('product_id'))
         quantity = int(request.POST.get('product_qty'))
-        size = str(request.POST.get('product_size'))
-        color = str(request.POST.get('product_color'))
+        color = int(request.POST.get('product_color'))
+        size = request.POST.get('product_size')
 
-        product = get_object_or_404(ProductVariant, product=prod_id, size=size, color=color)
-        cart = get_or_create_cart(request)
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+        if size:
+            size = int(size)
+            product = get_object_or_404(ProductVariant, product=prod_id, size=size, color=color)
+            cart = get_or_create_cart(request)
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
-        if created:
-            cart_item.quantity = quantity
-        else:
-            cart_item.quantity += quantity
-        cart_item.save()
-        total_items = cart.total_items()
-        # TODO consider anonymous user's cart
-        
-        return JsonResponse({'status': 'success', 'message': 'Prodotto aggiunto/aggiornato nel carrello.',
-                             'total_items': total_items, 'cart_item_quantity': cart_item.quantity})
+            if created:
+                cart_item.quantity = quantity
+            else:
+                cart_item.quantity += quantity
+            cart_item.save()
+            total_items = cart.total_items()
+            # TODO consider anonymous user's cart
 
-    print("Invalid request method")
+            return JsonResponse({'status': 'success', 'message': 'Product/s add to cart',
+                                 'total_items': total_items,
+                                 'cart_item_quantity': cart_item.quantity})
+
     return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)
 
 

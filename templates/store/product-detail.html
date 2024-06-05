@@ -55,8 +55,10 @@
               </div>
               
               -->
-            <input type="hidden" value="{% url 'store:update-product' %}" id="update-product-url">
-            <div class="fit-content d-flex align-items-center btn-group mx-4 flex-wrap">
+        <input type="hidden" value="{% url 'store:update-product' %}" id="update-product-url">
+        <div class="mx-4 d-flex flex-column">
+            <span class="form-label">Select size:</span>
+            <div class="fit-content d-flex align-items-center btn-group  flex-wrap">
                 
                 
                 {% for size in sizes %}
@@ -69,6 +71,7 @@
                 {% endfor %}
                 
               </div>
+        </div>
     
             
         

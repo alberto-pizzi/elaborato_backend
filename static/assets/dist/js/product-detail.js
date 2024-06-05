@@ -27,15 +27,23 @@ function getProductQuantity(){
 function updateSizes(response){
     $('.size-selector').prop('disabled',false);
     response.sizes_out_of_stock.forEach(function (item){
-        let sizeId = 'size_' + item
-        console.log('size id for: ', response.sizes_out_of_stock);
+        let sizeId = 'size_' + item;
         document.getElementById(sizeId).disabled = true;
     });
 }
 
 function updateProductPrice(response){
     $('#product-price').text(response.new_price);
-    console.log('cambio prezzo');
+}
+
+function getSizeSelected(){
+    let radio = document.getElementsByName('size');
+    for (let i = 0; i < radio.length; i++){
+        if (radio[i].checked){
+            return radio[i].value;
+        }
+    }
+    return null;
 }
 
 document.getElementById('select-quantity').addEventListener('change', function() {
@@ -53,12 +61,9 @@ document.getElementById('select-quantity').addEventListener('change', function()
 document.getElementById('select-color').addEventListener('change', function() {
     let product_id = $(this).closest('.product_data').find('.prod_id').val();
     let product_color = $('select#select-color').val();
-
     let token = $('input[name=csrfmiddlewaretoken]').val();
-
     let ajax_url = $('#update-product-url').val();
 
-    //let size_selected = $('input[name="size"]:checked').val();
 
    $.ajax({
        method: "POST",
@@ -71,7 +76,6 @@ document.getElementById('select-color').addEventListener('change', function() {
        },
        dataType: "json",
        success: function (response){
-           console.log('ritorno successo');
            updateSizes(response);
            updateProductPrice(response);
            //toggleCartOptions(response, addButton);
@@ -86,14 +90,13 @@ document.getElementById('select-color').addEventListener('change', function() {
 
 $('.add-to-cart').click(function (e){
    e.preventDefault();
-
    let product_id = $(this).closest('.product_data').find('.prod_id').val();
-   let product_size = $('select#select-size').val();
+   let product_size = getSizeSelected();
    let product_color = $('select#select-color').val();
    let token = $('input[name=csrfmiddlewaretoken]').val();
    let addButton = $(this);
 
-   let ajax_url = document.getElementById('ajax_url').value
+   let ajax_url = $('#ajax_url').val();
 
    $.ajax({
        method: "POST",
@@ -108,7 +111,6 @@ $('.add-to-cart').click(function (e){
        dataType: "json",
        success: function (response){
            getTotalItems(response);
-           //toggleCartOptions(response, addButton);
        },
        error: getAjaxErrorMessage
    });
