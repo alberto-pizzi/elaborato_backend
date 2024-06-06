@@ -71,13 +71,10 @@ def remove_from_cart(request):
              'cart_item_quantity': cart_item.quantity, 'total_price': total_price})
     return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)
 
-def checkout(request):
-    return render(request, 'order/checkout.html')
 
-def cart_overview(request):
+
+def cart_info(request):
     cart = get_or_create_cart(request)
-
-    products = ProductVariant.objects.all()
     cart_items = CartItem.objects.filter(cart=cart).select_related('product')
 
     cart_products = [
@@ -91,6 +88,16 @@ def cart_overview(request):
         } for item in cart_items
     ]
 
-    return render(request, 'order/cart.html', {'cart_products': cart_products,
-                                               'total_items': cart.total_items(),
-                                               'total_price': cart.total_price()})
+    data_response = {
+        'cart_products': cart_products,
+        'total_items': cart.total_items(),
+        'total_price': cart.total_price()
+    }
+
+    return data_response
+
+def checkout(request):
+    return render(request, 'order/checkout.html', cart_info(request))
+
+def cart_overview(request):
+    return render(request, 'order/cart.html', cart_info(request))
