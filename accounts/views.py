@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 
 # Create your views here.
-from .models import CustomUser
+from .models import CustomUser, Address
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -38,7 +38,14 @@ def signup_view(request):
             email=email,
             password=password,
             first_name=first_name,
-            last_name=last_name,
+            last_name=last_name
+        )
+
+        user_address = Address(
+            user=user_profile,
+            nickname=first_name + ' ' + last_name + ' ' + address1,
+            first_name_recipient=first_name,
+            last_name_recipient=last_name,
             address1=address1,
             address2=address2,
             country=country,
@@ -47,6 +54,7 @@ def signup_view(request):
         )
 
         user_profile.save()
+        user_address.save()
 
         return redirect('login')
 
