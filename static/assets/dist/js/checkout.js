@@ -17,3 +17,24 @@
     }, false)
   })
 })()
+
+
+function getAddressSelected(){
+    let radio = document.getElementsByName('address');
+    for (let i = 0; i < radio.length; i++){
+        if (radio[i].checked){
+            return radio[i].value;
+        }
+    }
+    return null;
+}
+
+
+document.getElementById('save-user').addEventListener('click', function() {
+    let hiddenForm = document.getElementById('sign-up-hidden-form');
+    if (this.checked) {
+        hiddenForm.classList.remove('d-none');
+    } else {
+        hiddenForm.classList.add('d-none');
+    }
+});

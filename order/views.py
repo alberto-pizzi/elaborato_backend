@@ -2,11 +2,11 @@ from django.shortcuts import render
 
 from store.models import Product, ProductVariant
 from order.models import Cart, CartItem
+from accounts.models import Address, CustomUser
 from django.http import JsonResponse
 import uuid
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-
 
 # Create your views here.
 from django.contrib import messages
@@ -96,8 +96,63 @@ def cart_info(request):
 
     return data_response
 
+
 def checkout(request):
-    return render(request, 'order/checkout.html', cart_info(request))
+    # TODO add link with fileds and db
+    if request.user.is_authenticated:
+        user_id = request.user.id
+
+        user_addresses = Address.objects.filter(user=user_id).all()
+        print(user_addresses)
+        data_response = {
+            'user_addresses': user_addresses
+        }
+    else:
+
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            address1 = request.POST.get('address1')
+            address2 = request.POST.get('address2')
+            country = request.POST.get('country')
+            state = request.POST.get('state')
+            zip = request.POST.get('zip')
+            save_user = request.POST.get('save_user')
+
+            if save_user:
+                username = request.POST.get('username')
+                password = request.POST.get('password')
+
+                user_profile = CustomUser.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name
+                )
+
+                user_address = Address(
+                    user=user_profile,
+                    nickname=first_name + ' ' + last_name + ' ' + address1,
+                    first_name_recipient=first_name,
+                    last_name_recipient=last_name,
+                    address1=address1,
+                    address2=address2,
+                    country=country,
+                    state=state,
+                    zip=zip
+                )
+
+                user_profile.save()
+                user_address.save()
+
+        data_response = {
+            'user_addresses': None
+        }
+
+    return render(request, 'order/checkout.html', cart_info(request) | data_response)
+
 
 def cart_overview(request):
     return render(request, 'order/cart.html', cart_info(request))
