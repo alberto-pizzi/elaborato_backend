@@ -101,7 +101,7 @@ def cart_info(request):
 
 
 def checkout(request):
-    # TODO add link with fileds and db
+    # TODO add items into order
     cart = get_or_create_cart(request)
     if request.user.is_authenticated:
 
@@ -124,6 +124,8 @@ def checkout(request):
                 payment_method=payment
             )
             order.save()
+
+
 
         data_response = {
             'user_addresses': user_addresses

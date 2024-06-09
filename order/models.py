@@ -58,7 +58,7 @@ class OrderStatus(enum.Enum):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False,editable=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True,editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     total_products = models.PositiveIntegerField(null=False,blank=False,editable=False)
     total_price = models.DecimalField(max_digits=10, decimal_places=2,null=False,blank=False,default=0,editable=False)
