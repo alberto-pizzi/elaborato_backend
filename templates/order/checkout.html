@@ -74,7 +74,9 @@
       <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Shipping address</h4>
           {% if user.is_authenticated %}
-            <fieldset class="mb-3">
+              <form method="POST" action="">
+                {% csrf_token %}
+                  <fieldset class="mb-3">
             <legend>Choose your address:</legend>
                 <div class="d-flex">
                     {% if user_addresses %}
@@ -85,10 +87,12 @@
                             </div>
                         {% endfor %}
                     {% else %}
-                    There is no address 
-                    {% endif %}
+                    There is no address
+            {% endif %}
                 </div>
           </fieldset>
+              {% include 'order/payment.html' %}
+              </form>
         {% else %}
               <form class="needs-validation" novalidate>
           <div class="row g-3">

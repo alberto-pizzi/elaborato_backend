@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from store.models import Product, ProductVariant
-from order.models import Cart, CartItem
+from order.models import Cart, CartItem,PaymentMethod,Order,OrderItem
 from accounts.models import Address, CustomUser
 from django.http import JsonResponse
 import uuid
@@ -72,9 +72,7 @@ def remove_from_cart(request):
     return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)
 
 
-
-def cart_info(request):
-    cart = get_or_create_cart(request)
+def get_cart_products(cart):
     cart_items = CartItem.objects.filter(cart=cart).select_related('product')
 
     cart_products = [
@@ -88,8 +86,13 @@ def cart_info(request):
         } for item in cart_items
     ]
 
+    return cart_products
+
+
+def cart_info(request):
+    cart = get_or_create_cart(request)
     data_response = {
-        'cart_products': cart_products,
+        'cart_products': get_cart_products(cart),
         'total_items': cart.total_items(),
         'total_price': cart.total_price()
     }
@@ -99,11 +102,29 @@ def cart_info(request):
 
 def checkout(request):
     # TODO add link with fileds and db
+    cart = get_or_create_cart(request)
     if request.user.is_authenticated:
+
         user_id = request.user.id
 
+        user_profile = CustomUser.objects.filter(id=user_id).all().first()
         user_addresses = Address.objects.filter(user=user_id).all()
-        print(user_addresses)
+        if request.method == 'POST':
+            chosen_address = request.POST.get('address')
+            payment_method = request.POST.get('payment-method')
+
+            address = Address.objects.filter(id=chosen_address).all().first()
+            payment = PaymentMethod.objects.filter(id=payment_method).all().first()
+
+            order = Order(
+                user=user_profile,
+                total_products=cart.total_items(),
+                total_price=cart.total_price(),
+                address=address,
+                payment_method=payment
+            )
+            order.save()
+
         data_response = {
             'user_addresses': user_addresses
         }
@@ -119,7 +140,7 @@ def checkout(request):
             state = request.POST.get('state')
             zip = request.POST.get('zip')
             save_user = request.POST.get('save_user')
-
+            print('Salvataggio: ', save_user)
             if save_user:
                 username = request.POST.get('username')
                 password = request.POST.get('password')
@@ -150,6 +171,9 @@ def checkout(request):
         data_response = {
             'user_addresses': None
         }
+
+    payment_methods = PaymentMethod.objects.all().distinct()
+    data_response['payment_methods'] = payment_methods
 
     return render(request, 'order/checkout.html', cart_info(request) | data_response)
 
