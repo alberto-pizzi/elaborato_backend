@@ -29,12 +29,14 @@ function getAddressSelected(){
     return null;
 }
 
-// TODO implement required toggle per hiding form
+
 document.getElementById('save-user').addEventListener('click', function() {
     let hiddenForm = document.getElementById('sign-up-hidden-form');
     if (this.checked) {
         hiddenForm.classList.remove('d-none');
+        $('#sign-up-hidden-form .required-field').attr('required','required')
     } else {
+        $('#sign-up-hidden-form .required-field').removeAttr('required')
         hiddenForm.classList.add('d-none');
     }
 });
