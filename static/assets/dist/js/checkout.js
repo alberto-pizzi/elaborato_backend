@@ -29,7 +29,7 @@ function getAddressSelected(){
     return null;
 }
 
-
+// TODO implement required toggle per hiding form
 document.getElementById('save-user').addEventListener('click', function() {
     let hiddenForm = document.getElementById('sign-up-hidden-form');
     if (this.checked) {

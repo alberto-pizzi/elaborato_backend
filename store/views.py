@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect,get_object_or_404
 
 from order.models import Cart
 # Create your views here.
-from .models import Product, ProductVariant, Category, Size, Color
+from .models import Product, Category, Size, Color,ProductVariant
 from order.views import get_or_create_cart
 from order.models import CartItem
 from django.db.models import Q

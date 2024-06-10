@@ -20,7 +20,7 @@
                 <div class="product_data">
                     <li class="list-group-item d-flex justify-content-between lh-sm">
             <div class="d-flex">
-                {% csrf_token %}
+
 
                 <input type="hidden" class="prod_id" value="{{ cart_product.product_id }}">
                 <!-- FIXME margin div button-->
@@ -75,7 +75,7 @@
         <h4 class="mb-3">Shipping address</h4>
           {% if user.is_authenticated %}
               <form method="POST" action="">
-                {% csrf_token %}
+
                   <fieldset class="mb-3">
             <legend>Choose your address:</legend>
                 <div class="d-flex">
@@ -94,7 +94,7 @@
               {% include 'order/payment.html' %}
               </form>
         {% else %}
-              <form class="needs-validation" novalidate>
+              <form class="" method="POST" action="">
           <div class="row g-3">
             <div class="col-sm-6">
               <label for="firstName" class="form-label">First name</label>
@@ -147,7 +147,7 @@
 
             <div class="col-md-4">
               <label for="state" class="form-label">State</label>
-              <select class="form-select" id="state" name="country" required>
+              <select class="form-select" id="state" name="state" required>
                 <option value="">Choose...</option>
                 <option>California</option>
               </select>
@@ -176,7 +176,7 @@
                   <label for="username" class="form-label">Username</label>
                   <div class="input-group has-validation">
                     <span class="input-group-text">@</span>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" >
                   <div class="invalid-feedback">
                       Your username is required.
                     </div>
@@ -185,14 +185,14 @@
     
                 <div class="col-sm-6">
                   <label for="lastName" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="password1" name="password" placeholder="" value="" required="">
+                  <input type="password" class="form-control" id="password1" name="password" placeholder="" value="" >
                   <div class="invalid-feedback">
                     Valid password is required.
                   </div>
                 </div>
                 <div class="col-sm-6">
                   <label for="lastName" class="form-label">Confirm Password</label>
-                  <input type="password" class="form-control" id="password2" name="confirm_password" placeholder="" value="" required="">
+                  <input type="password" class="form-control" id="password2" name="confirm_password" placeholder="" value="" >
                   <div class="invalid-feedback">
                     Valid password is required.
                   </div>

@@ -39,12 +39,6 @@ class CartItem(models.Model):
         return f'{self.quantity} x {self.product.__str__()}'
 
 
-class PaymentMethod(models.Model):
-    name = models.CharField(max_length=50, null=False, blank=False)
-
-    def __str__(self):
-        return self.name
-
 class OrderStatus(enum.Enum):
     PENDING = "pending"
     PROCESSING = "processing"
@@ -58,16 +52,25 @@ class OrderStatus(enum.Enum):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True,editable=False)
+    PAYMENT_METHODS = [
+        ('credit', 'Credit Card'),
+        ('debit', 'Debit Card'),
+        ('paypal', 'PayPal')
+    ]
+
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True,editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     total_products = models.PositiveIntegerField(null=False,blank=False,editable=False)
     total_price = models.DecimalField(max_digits=10, decimal_places=2,null=False,blank=False,default=0,editable=False)
-    payment_method = models.ForeignKey(PaymentMethod,on_delete=models.CASCADE,null=False,blank=False,editable=False)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE,null=True,blank=True)
+    payment_method = models.CharField(max_length=20,choices=PAYMENT_METHODS,null=False,blank=False,editable=False)
+    address = models.ForeignKey(Address, on_delete=models.PROTECT,null=True,blank=True)
     status = models.CharField(max_length=20, choices=OrderStatus.choices(), default=OrderStatus.PENDING.value)
 
     def __str__(self):
-        return 'Order n.: ' + f'{self.id} x {self.user.first_name + self.user.last_name}'
+        if self.user:
+            return 'Order n.: ' + f'{self.id} x {self.user.first_name + self.user.last_name}'
+        else:
+            return 'Order n.: ' + f'{self.id} x {self.address.first_name_recipient + self.address.last_name_recipient}'
 
 
 
