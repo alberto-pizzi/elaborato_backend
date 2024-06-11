@@ -38,28 +38,34 @@ def add_to_cart(request):
             size = int(size)
             product = get_object_or_404(ProductVariant, product=prod_id, size=size, color=color)
             cart = get_or_create_cart(request)
-            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-
             # TODO consider anonymous user's cart
-            if product.quantity >= (quantity + cart_item.quantity):
-                if created:
-                    cart_item.quantity = quantity
-                else:
-                    cart_item.quantity += quantity
-                cart_item.save()
+            cart_item = CartItem.objects.filter(cart=cart, product=product).first()
 
-                # alert_class is a Bootstrap class for banner color
-                alert_class = "alert-success"
-                result_message = "Item/s added successfully"
-            else:
-                alert_class = "alert-danger"
-                # the cart items are also counted
-                result_message = "Error: quantity selected is grower than stock, available items are: " + str(product.quantity - cart_item.quantity)
+            # alert_class is a Bootstrap class for banner color
+            alert_class = "alert-success"
+            result_message = "Item/s added successfully"
+            error_message = "Error: quantity selected is grower than stock, available items are: "
+            if cart_item:
+                if product.quantity >= (quantity + cart_item.quantity):
+                    cart_item.quantity += quantity
+                    cart_item.save()
+                else:
+                    alert_class = "alert-danger"
+                    # the cart items are also counted
+                    result_message = (error_message + str(product.quantity) + " of which "
+                                      + str(cart_item.quantity) + " in the cart")
+            elif not cart_item:
+                if product.quantity >= quantity:
+                    cart_item = CartItem.objects.create(cart=cart, product=product, quantity=quantity)
+                    cart_item.save()
+                else:
+                    alert_class = "alert-danger"
+                    result_message = error_message + str(product.quantity)
 
             total_items = cart.total_items()
             return JsonResponse({'status': 'success', 'message': 'Product/s add to cart',
                                  'total_items': total_items,
-                                 'cart_item_quantity': cart_item.quantity,
+                                 'cart_item_quantity': cart_item.quantity if cart_item else 0,
                                  'result_message': result_message,
                                  'alert_class': alert_class})
 
