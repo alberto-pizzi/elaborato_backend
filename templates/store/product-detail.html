@@ -9,6 +9,10 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+    <div class="alert alert-dismissible fade show d-none" role="alert" id="notification-banner">
+          <span id="notification-text"></span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
     <div class="row p-4 align-items-center rounded-3 border shadow-lg product_data">
         {% csrf_token %}

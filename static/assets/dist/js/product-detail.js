@@ -46,6 +46,25 @@ function getSizeSelected(){
     return null;
 }
 
+function showNotification(response) {
+    if (response.result_message !== undefined) {
+        console.log(response.result_message);
+        let banner = $('#notification-banner');
+        $('#notification-text').text(response.result_message);
+        banner.removeClass('d-none');
+        banner.addClass(response.alert_class);
+
+        setTimeout(() => {
+            banner.removeClass(response.alert_class);
+            banner.addClass('d-none');
+        }, 3000);
+    }
+    else{
+        console.error('Error: total items not found into response');
+    }
+}
+
+
 document.getElementById('select-quantity').addEventListener('change', function() {
     let moreQuantityInput = document.querySelector('input#select-quantity')
     if (this.value === '20+') {
@@ -111,6 +130,7 @@ $('.add-to-cart').click(function (e){
        dataType: "json",
        success: function (response){
            getTotalItems(response);
+           showNotification(response)
        },
        error: getAjaxErrorMessage
    });

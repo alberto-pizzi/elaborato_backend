@@ -40,17 +40,28 @@ def add_to_cart(request):
             cart = get_or_create_cart(request)
             cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
-            if created:
-                cart_item.quantity = quantity
-            else:
-                cart_item.quantity += quantity
-            cart_item.save()
-            total_items = cart.total_items()
             # TODO consider anonymous user's cart
+            if product.quantity >= (quantity + cart_item.quantity):
+                if created:
+                    cart_item.quantity = quantity
+                else:
+                    cart_item.quantity += quantity
+                cart_item.save()
 
+                # alert_class is a Bootstrap class for banner color
+                alert_class = "alert-success"
+                result_message = "Item/s added successfully"
+            else:
+                alert_class = "alert-danger"
+                # the cart items are also counted
+                result_message = "Error: quantity selected is grower than stock, available items are: " + str(product.quantity - cart_item.quantity)
+
+            total_items = cart.total_items()
             return JsonResponse({'status': 'success', 'message': 'Product/s add to cart',
                                  'total_items': total_items,
-                                 'cart_item_quantity': cart_item.quantity})
+                                 'cart_item_quantity': cart_item.quantity,
+                                 'result_message': result_message,
+                                 'alert_class': alert_class})
 
     return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)
 
@@ -169,7 +180,6 @@ def checkout(request):
             payment_method=payment_method
         )
         order.save()
-
 
     payment_methods = Order.PAYMENT_METHODS
     data_response['payment_methods'] = payment_methods
