@@ -36,6 +36,10 @@ function updateProductPrice(response){
     $('#product-price').text(response.new_price);
 }
 
+function updateProductImage(response){
+    $('#product-image').attr('src',response.new_image_url);
+}
+
 function getSizeSelected(){
     let radio = document.getElementsByName('size');
     for (let i = 0; i < radio.length; i++){
@@ -97,6 +101,7 @@ document.getElementById('select-color').addEventListener('change', function() {
        success: function (response){
            updateSizes(response);
            updateProductPrice(response);
+           updateProductImage(response)
            //toggleCartOptions(response, addButton);
        },
        error: getAjaxErrorMessage

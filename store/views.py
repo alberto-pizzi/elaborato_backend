@@ -77,12 +77,16 @@ def update_product_info(request):
         prod_id = int(request.POST.get('prod_id'))
         prod_color_id = int(request.POST.get('product_color_id'))
 
-        new_price = ProductVariant.objects.filter(product_id=prod_id, color_id=prod_color_id).first()
-        new_price = new_price.price
+        new_prod = ProductVariant.objects.filter(product_id=prod_id, color_id=prod_color_id).first()
+        new_price = new_prod.price
+
+        new_image_url = new_prod.image_id.image.url
+
 
         data_response = {
             'sizes_out_of_stock': exclude_sizes(prod_id,prod_color_id),
-            'new_price': new_price
+            'new_price': new_price,
+            'new_image_url': new_image_url
         }
         return JsonResponse({'status': 'success', 'message': 'JSON Success'} | data_response)
     return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'}, status=400)

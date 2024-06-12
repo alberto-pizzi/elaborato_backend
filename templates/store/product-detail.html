@@ -96,10 +96,14 @@
 
         </div>
       </div>
-        <!-- TODO implement dynamic image by color -->
+    
       <div class="col-lg-5 p-0 overflow-hidden shadow-lg">
-          <img class="rounded-lg-3 w-100" src="{% static  'images/fiore.jpeg' %}" alt="" >
-      </div>
+           <img class="rounded-lg-3 w-100 p-4" src="{{ product.image_id.image.url }}" alt="" id="product-image">
+      </div> 
+    
+    
+
+    
     </div>
 
 {% endblock content %}
