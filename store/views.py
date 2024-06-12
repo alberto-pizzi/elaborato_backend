@@ -143,3 +143,32 @@ def category_view(request, gen, category):
     }
 
     return render(request, 'store/store.html', data | header_data(request))
+
+
+def search_view(request):
+
+    if request.method == "GET":
+        searched = request.GET.get('searched').strip()
+
+        if searched:
+            keywords = searched.split()
+            query_objects = Q()
+            for keyword in keywords:
+                query_objects &= (
+                    Q(title__icontains=keyword) |
+                    Q(product__description__icontains=keyword) |
+                    Q(color__color_name__icontains=keyword) |
+                    Q(size__size_name__icontains=keyword)
+                )
+            products = ProductVariant.objects.select_related('product', 'color', 'size').filter(query_objects).distinct()
+        else:
+            return redirect('store:home')
+
+        data = {
+            'products': products,
+            'searched': searched
+        }
+
+        return render(request, 'store/searched.html', data | header_data(request))
+
+    return render(request, 'store/searched.html', header_data(request))

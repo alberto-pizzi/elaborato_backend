@@ -1,0 +1,14 @@
+{% extends 'store/index.html' %}
+
+<!-- TODO improve Django blocks -->
+{% block categories %}
+  <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Search</h1>
+
+        <p class="lead text-body-secondary">You searched for: "{{ searched }}"</p>
+      </div>
+    </div>
+  </section>
+{% endblock categories %}
