@@ -1,0 +1,33 @@
+
+
+{% block username %}
+<div class="col-12">
+  <label for="username" class="form-label">Username</label>
+  <div class="input-group has-validation">
+    <span class="input-group-text">@</span>
+    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required="">
+  <div class="invalid-feedback">
+      Your username is required.
+    </div>
+  </div>
+</div>
+{% endblock username %}
+{% block password %}
+<div class="col-sm-6">
+  <label for="lastName" class="form-label">Password</label>
+  <input type="password" class="form-control" id="password1" name="password" placeholder="" value="" required="">
+  <div class="invalid-feedback">
+    Valid password is required.
+  </div>
+</div>
+{% endblock password %}
+
+{% block confirm_password %}
+<div class="col-sm-6">
+  <label for="lastName" class="form-label">Confirm Password</label>
+  <input type="password" class="form-control" id="password2" name="confirm_password" placeholder="" value="" required="">
+  <div class="invalid-feedback">
+    Valid password is required.
+  </div>
+</div>
+{% endblock confirm_password %}
