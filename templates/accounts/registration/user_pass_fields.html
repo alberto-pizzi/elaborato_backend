@@ -1,12 +1,13 @@
 
 
 {% block username %}
+    <input type="hidden" id="check-username" value="{% url 'accounts:check-username' %}">
 <div class="col-12">
   <label for="username" class="form-label">Username</label>
   <div class="input-group has-validation">
     <span class="input-group-text">@</span>
-    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required="">
-  <div class="invalid-feedback">
+    <input type="text" class="form-control required-field" id="username" name="username" placeholder="Username" required="">
+  <div class="invalid-feedback" id="username-error-message">
       Your username is required.
     </div>
   </div>
@@ -15,9 +16,9 @@
 {% block password %}
 <div class="col-sm-6">
   <label for="lastName" class="form-label">Password</label>
-  <input type="password" class="form-control" id="password1" name="password" placeholder="" value="" required="">
+  <input type="password" class="form-control required-field" id="password1" name="password" placeholder="" value="" required="">
   <div class="invalid-feedback">
-    Valid password is required.
+    Password must have at least 8 characters.
   </div>
 </div>
 {% endblock password %}
@@ -25,9 +26,9 @@
 {% block confirm_password %}
 <div class="col-sm-6">
   <label for="lastName" class="form-label">Confirm Password</label>
-  <input type="password" class="form-control" id="password2" name="confirm_password" placeholder="" value="" required="">
+  <input type="password" class="form-control required-field" id="password2" name="confirm_password" placeholder="" value="" required="">
   <div class="invalid-feedback">
-    Valid password is required.
+    Passwords doesn't match.
   </div>
 </div>
 {% endblock confirm_password %}

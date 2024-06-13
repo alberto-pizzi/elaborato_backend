@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, HttpResponse
 # Create your views here.
 from .models import CustomUser, Address
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
 
 
 def login_view(request):
@@ -64,3 +65,21 @@ def signup_view(request):
 def logout_view(request):
     logout(request)
     return redirect('store:home')
+
+def check_username(request):
+    username = request.POST.get('username')
+    if username:
+        if CustomUser.objects.filter(username=username).exists():
+            return JsonResponse({'exists': True})
+        else:
+            return JsonResponse({'exists': False})
+    return JsonResponse({'error': 'Username not provided'}, status=400)
+
+def check_email(request):
+    email = request.POST.get('email')
+    if email:
+        if CustomUser.objects.filter(email=email).exists():
+            return JsonResponse({'exists': True})
+        else:
+            return JsonResponse({'exists': False})
+    return JsonResponse({'error': 'Username not provided'}, status=400)

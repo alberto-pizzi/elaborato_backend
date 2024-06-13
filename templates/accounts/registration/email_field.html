@@ -1,10 +1,11 @@
 
 {% block email %}
+<input type="hidden" id="check-email" value="{% url 'accounts:check-email' %}">
 <div class="col-12">
   <label for="email" class="form-label">Email</label>
   <input type="email" class="form-control" id="email" name="email" placeholder="yourname@example.com" required="">
-  <div class="invalid-feedback">
-    Please enter a valid email address for shipping updates.
+  <div class="invalid-feedback" id="email-error-message">
+    Please enter a valid email address.
   </div>
 </div>
 {% endblock email %}

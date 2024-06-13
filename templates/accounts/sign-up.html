@@ -99,7 +99,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="{% static 'ssets/dist/css/checkout.css'%}" rel="stylesheet">
+    <link href="{% static 'assets/dist/css/checkout.css'%}" rel="stylesheet">
   </head>
   <body class="bg-body-tertiary">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -169,10 +169,10 @@
           <div class="row g-3">
 
 
-            {% include 'accounts/account_fields/name_fields.html' %}
-            {% include 'accounts/account_fields/email_field.html' %}
-            {% include 'accounts/account_fields/user_pass_fields.html' %}
-            {% include 'accounts/account_fields/address_fields.html' %}
+            {% include 'accounts/registration/name_fields.html' %}
+            {% include 'accounts/registration/email_field.html' %}
+            {% include 'accounts/registration/user_pass_fields.html' %}
+            {% include 'accounts/registration/address_fields.html' %}
 
           </div>
           <hr class="my-4">
@@ -193,6 +193,7 @@
   </footer>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="{%  static 'assets/dist/js/bootstrap.bundle.min.js'%}"></script>
 <script src="{% static 'assets/dist/js/checkout.js'%}"></script>
 <script src="{% static  'assets/dist/js/form-validation.js' %}"></script>

@@ -193,15 +193,15 @@
             <li><a class="dropdown-item" href="#">Orders</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Log out</a></li>
+            <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Log out</a></li>
           </ul>
         </div>
           {% else %}
             <div class="text-end">
-            <a href="{% url 'login' %}">
+            <a href="{% url 'accounts:login' %}">
               <button type="button" class="btn btn-outline-light me-2">Login</button>
             </a>
-            <a href="{% url 'sign-up' %}">
+            <a href="{% url 'accounts:sign-up' %}">
                 <button type="button" class="btn btn-warning me-4">Sign-up</button>
             </a>
         </div>

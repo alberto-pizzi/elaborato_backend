@@ -21,7 +21,7 @@ $('.remove-from-cart').click(function (e){
    let token = $('input[name=csrfmiddlewaretoken]').val();
    let addButton = $(this);
 
-   let ajax_url = document.getElementById('remove-from-cart').value
+   let ajax_url = document.getElementById('remove-from-cart').value;
    $.ajax({
        method: "POST",
        url: ajax_url,
