@@ -132,11 +132,8 @@ def store_view(request, gen):
 
 
 def category_view(request, gen, category):
-    if gen == 'Kid' or gen == 'kid':
-        products = ProductVariant.objects.select_related('product__category', 'product').filter(
-            Q(product__category__category_slug=category) & Q(product__gender=gen))
-    else:
-        products = ProductVariant.objects.select_related('product__category', 'product').filter(Q(product__category__category_slug=category) & (Q(product__gender=gen) | Q(product__gender='Unisex')) )
+
+    products = ProductVariant.objects.select_related('product__category', 'product').filter(Q(product__category__category_slug=category) & (Q(product__gender=gen) | Q(product__gender='Unisex')) )
 
     data = {
         'products': products,

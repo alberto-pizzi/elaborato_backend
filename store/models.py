@@ -32,8 +32,7 @@ class Product(models.Model):
     GENDERS = (
         ('Male', 'Male'),
         ('Female', 'Female'),
-        ('Unisex', 'Unisex'),
-        ('Kid', 'Kid'),
+        ('Unisex', 'Unisex')
     )
 
     name = models.CharField(max_length=255, null=False, blank=False)
