@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from store.models import Product, ProductVariant
 from order.models import Cart, CartItem,Order,OrderItem
@@ -178,14 +178,19 @@ def checkout(request):
 
             user_address.save()
 
-        order = Order(
-            user=user_profile,
-            total_products=cart.total_items(),
-            total_price=cart.total_price(),
-            address=user_address,
-            payment_method=payment_method
-        )
-        order.save()
+        if user_address:
+            order = Order(
+                user=user_profile,
+                total_products=cart.total_items(),
+                total_price=cart.total_price(),
+                address=user_address,
+                payment_method=payment_method
+            )
+            order.save()
+        else:
+            print('indirizzo mancante')
+            messages.error(request,"You haven't any address selected")
+            return redirect('order:checkout')
 
     payment_methods = Order.PAYMENT_METHODS
     data_response['payment_methods'] = payment_methods
