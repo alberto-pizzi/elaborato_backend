@@ -42,9 +42,13 @@
   </div>
   <div class="card-body">
       {% for item in order_items %}
-      <div class="d-flex justify-content-between overflow-hidden">
+      <div class="d-flex justify-content-between overflow-hidden mb-3">
         <div class="order-item-box">
+            {% if item.product.image_id.image.url %}
           <img class="order-item-image" src="{{ item.product.image_id.image.url }}" alt="{{ item.product.title}}">
+            {% else %}
+                Image not found
+            {% endif %}
         </div>
           <div class="align-content-center d-flex justify-content-around flex-column text-center">
               <span>{{ item.product.title }}</span>
