@@ -63,8 +63,7 @@
         <div class="mx-4 d-flex flex-column">
             <span class="form-label">Select size:</span>
             <div class="fit-content d-flex align-items-center btn-group  flex-wrap">
-                
-                
+
                 {% for size in sizes %}
                     {% if size.id in blocked_sizes  %}
                         <input type="radio" class="btn-check size-selector" name="size" id="size_{{ size.id }}" value="{{ size.id }}" autocomplete="off" disabled>
@@ -75,13 +74,18 @@
                 {% endfor %}
                 
               </div>
+            </div>
         </div>
-    
-            
-        
-            
-        
 
+
+        <div class="align-content-center  mb-3">
+            {% if product.quantity <= 0 %}
+                <span class="text-danger">Not available</span>
+            {% elif product.quantity <= 10 %}
+                <span class="text-warning">Remaining items: </span> <span class="text-warning">{{ product.quantity }}</span>
+            {% else %}
+                <span class="text-success">In stock</span>
+            {% endif %}
         </div>
 
         <div class="align-content-center display-6 fw-bold lh-1 text-body-emphasis mb-4">

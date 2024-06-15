@@ -226,8 +226,10 @@
         </ul>
 
 
-            <div class="d-flex justify-content-end my-3">
-                <a href="{% url 'order:checkout' %}" class="btn btn-primary btn-lg">Go to checkout ></a>
+            <div class="d-flex justify-content-between my-3">
+                <a href="{% url 'store:home' %}" class="btn btn-secondary btn-lg">< Home</a>
+
+                <a href="{% url 'order:checkout' %}" class="btn btn-primary btn-lg {% if total_items <= 0 %}disabled{% endif %}">Go to checkout ></a>
             </div>
       </div>
         {% endblock content %}

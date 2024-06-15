@@ -21,6 +21,7 @@ class OrderAdmin(admin.ModelAdmin):
     def display_name(self,obj):
         return f"{obj.address.last_name_recipient} {obj.address.first_name_recipient}"
 
+
     def order_n(self,obj):
         return f"{obj.id}"
 

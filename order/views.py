@@ -123,19 +123,19 @@ def checkout(request):
     data_response = {
         'user_addresses': None
     }
-    if request.method == 'POST':
-        payment_method = request.POST.get('payment-method')
-        if request.user.is_authenticated:
-            user_id = request.user.id
-            user_profile = CustomUser.objects.filter(id=user_id).all().first()
-            user_addresses = Address.objects.filter(user=user_id).all()
+    user_address = None
+    user_profile = None
+
+    if request.user.is_authenticated:
+        user_id = request.user.id
+        user_addresses = Address.objects.filter(user=user_id).all()
+        data_response['user_addresses'] = user_addresses
+        user_profile = CustomUser.objects.filter(id=user_id).all().first()
+        if request.method == 'POST':
             chosen_address = request.POST.get('address')
-
             user_address = Address.objects.filter(id=chosen_address).all().first()
-
-            data_response['user_addresses'] = user_addresses
-
-        else:
+    else:
+        if request.method == 'POST':
             email = request.POST.get('email')
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
@@ -160,9 +160,6 @@ def checkout(request):
                 )
 
                 user_profile.save()
-            else:
-                print('Save user: no')
-                user_profile = None
 
             user_address = Address(
                 user=user_profile,
@@ -178,7 +175,18 @@ def checkout(request):
 
             user_address.save()
 
-        if user_address:
+    if request.method == 'POST':
+        payment_method = request.POST.get('payment-method')
+
+        if user_address and payment_method:
+            # check if all product in the cart are available
+            for item in cart.cartitem_set.all():
+                product = item.product
+                if product.quantity < item.quantity:
+                    messages.error(request,"Some products in the cart no longer available")
+                    return redirect('order:checkout')
+
+            # create an order
             order = Order(
                 user=user_profile,
                 total_products=cart.total_items(),
@@ -187,9 +195,27 @@ def checkout(request):
                 payment_method=payment_method
             )
             order.save()
+
+            for item in cart.cartitem_set.all():
+                product = item.product
+
+                product.quantity -= item.quantity
+                product.save()
+
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity
+                )
+
+            cart.delete()
+            return redirect('store:home')
+
         else:
-            print('indirizzo mancante')
-            messages.error(request,"You haven't any address selected")
+            if not user_address:
+                messages.error(request,"You have no address selected")
+            if not payment_method:
+                messages.error(request,"You have no payment method selected")
             return redirect('order:checkout')
 
     payment_methods = Order.PAYMENT_METHODS
