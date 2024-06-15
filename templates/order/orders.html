@@ -22,7 +22,7 @@
           <a href="{% url 'order:order-detail' order.id %}" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center">
               <div class="w-100">
-                  <div class="d-flex justify-content-between">
+                  <div class="d-flex justify-content-between flex-wrap">
                               <div class="mx-4 d-flex">
                                   <span class="me-1 text-primary fw-bold">Order n. :</span>
                                   <span class="" > {{ order.id }}</span>
@@ -42,10 +42,14 @@
                                   <span class=""> {{ order.total_price }} $</span>
                               </div>
                           </div>
-                  <div class="d-flex justify-content-between">
+                  <div class="d-flex justify-content-between flex-wrap">
                               <div class="mx-4 d-flex">
                                   <span class="me-1 fw-bold">Order placed on:</span>
                                   <span class="" > {{ order.created_at.date }}</span>
+                              </div>
+                              <div class="mx-4 d-flex">
+                                  <span class="me-1 fw-bold">Items:</span>
+                                  <span class=""> {{ order.total_products }}</span>
                               </div>
                               <div class="mx-4 d-flex">
                                   <span class="me-1 text-warning fw-bold">Status:</span>
