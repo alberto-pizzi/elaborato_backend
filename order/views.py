@@ -254,6 +254,7 @@ def order_detail(request, id):
         order = Order.objects.get(id=id)
         data_response['order'] = order
 
-        # order_items = OrderItem.objects.filter(order)
+        order_items = OrderItem.objects.select_related('product').filter(order=id).all()
+        data_response['order_items'] = order_items
 
     return render(request, 'order/order-detail.html', cart_info(request) | data_response)

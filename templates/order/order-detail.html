@@ -1,6 +1,10 @@
 {% extends 'order/orders.html' %}
 {% load static %}
 
+{% block styles %}
+    <link href="{%  static 'assets/dist/css/orders.css' %}" rel="stylesheet">
+{% endblock styles %}
+
 {% block section_title %}Order details{% endblock section_title %}
 {% block section_par %}These are the order details you selected{% endblock section_par %}
 
@@ -10,13 +14,13 @@
     {% if order %}
     <div class="card text-center">
   <div class="card-header">
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between flex-wrap">
           <div class="mx-4 d-flex">
               <span class="me-1 text-primary fw-bold">Order N:</span>
               <span class="" > {{ order.id }}</span>
           </div>
 
-          <div class="mx-4 d-flex align-items-center">
+          <div class="mx-4 d-flex align-items-center overflow-hidden">
               <span class="me-1 fw-bold">Send to: </span>
           <!-- TODO improve address visualizing -->
               <span class="">{{ order.address.first_name_recipient }} {{ order.address.last_name_recipient }},
@@ -26,22 +30,45 @@
 
 
             <div class="mx-4 d-flex">
-              <span class="me-1 fw-bold">Total:</span>
+              <div class="mx-4 d-flex">
+              <span class="me-1 fw-bold">Total items:</span>
+              <span class=""> {{ order.total_products }}</span>
+          </div>
+              <span class="me-1 fw-bold">Total paid:</span>
               <span class=""> {{ order.total_price }} $</span>
           </div>
       </div>
 
   </div>
   <div class="card-body">
-      <!-- TODO implement products info -->
-      <div class="d-flex justify-content-between">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+      {% for item in order_items %}
+      <div class="d-flex justify-content-between overflow-hidden">
+        <div class="order-item-box">
+          <img class="order-item-image" src="{{ item.product.image_id.image.url }}" alt="{{ item.product.title}}">
+        </div>
+          <div class="align-content-center d-flex justify-content-around flex-column text-center">
+              <span>{{ item.product.title }}</span>
+              <div>
+                  {% if item.product.color %}
+                    <span>Color: {{ item.product.color }}</span>
+                  {% endif %}
+                  {% if item.product.size %}
+                    <span>  |  </span>
+                    <span>Size: {{ item.product.size }}</span>
+                  {% endif %}
+
+              </div>
+          </div>
+
+          <div class="align-content-center">
+              <span>{{ item.quantity }} x {{ item.product.price }} $</span>
+          </div>
+
       </div>
+      {% endfor %}
   </div>
   <div class="card-footer text-muted">
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between flex-wrap">
           <div class="mx-4 d-flex">
               <span class="me-1 text-warning fw-bold">Status:</span>
               <span class="" > {{ order.status }}</span>
