@@ -1,0 +1,63 @@
+{% extends 'order/orders.html' %}
+{% load static %}
+
+{% block section_title %}Order details{% endblock section_title %}
+{% block section_par %}These are the order details you selected{% endblock section_par %}
+
+
+
+{% block content %}
+    {% if order %}
+    <div class="card text-center">
+  <div class="card-header">
+      <div class="d-flex justify-content-between">
+          <div class="mx-4 d-flex">
+              <span class="me-1 text-primary fw-bold">Order N:</span>
+              <span class="" > {{ order.id }}</span>
+          </div>
+
+          <div class="mx-4 d-flex align-items-center">
+              <span class="me-1 fw-bold">Send to: </span>
+          <!-- TODO improve address visualizing -->
+              <span class="">{{ order.address.first_name_recipient }} {{ order.address.last_name_recipient }},
+              {{ order.address.address1 }}, {% if order.address.address2 %}{{ order.address.address2 }},{% endif %}
+              {{ order.address.state }}, {{ order.address.zip }}, {{ order.address.country }}</span>
+          </div>
+
+
+            <div class="mx-4 d-flex">
+              <span class="me-1 fw-bold">Total:</span>
+              <span class=""> {{ order.total_price }} $</span>
+          </div>
+      </div>
+
+  </div>
+  <div class="card-body">
+      <!-- TODO implement products info -->
+      <div class="d-flex justify-content-between">
+        <h5 class="card-title">Special title treatment</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+  </div>
+  <div class="card-footer text-muted">
+      <div class="d-flex justify-content-between">
+          <div class="mx-4 d-flex">
+              <span class="me-1 text-warning fw-bold">Status:</span>
+              <span class="" > {{ order.status }}</span>
+          </div>
+          <div class="mx-4 d-flex">
+              <span class="me-1 fw-bold">Order placed on:</span>
+              <span class="" > {{ order.created_at.date }}</span>
+          </div>
+
+      </div>
+
+  </div>
+    </div>
+    {% else %}
+        <div class="text-center text-danger">
+            Error during order response
+        </div>
+    {% endif %}
+{% endblock content %}

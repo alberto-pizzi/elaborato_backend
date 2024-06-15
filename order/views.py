@@ -226,3 +226,34 @@ def checkout(request):
 
 def cart_overview(request):
     return render(request, 'order/cart.html', cart_info(request))
+
+def orders(request):
+
+    data_response = {
+        'orders': None
+    }
+
+    if request.user.is_authenticated:
+        user_id = request.user.id
+        orders = Order.objects.filter(user=user_id).all().order_by('-created_at')
+        data_response['orders'] = orders
+
+
+
+    return render(request, 'order/orders.html', cart_info(request) | data_response)
+
+
+def order_detail(request, id):
+
+    data_response = {
+        'order': None
+    }
+
+    if request.user.is_authenticated:
+        user_id = request.user.id
+        order = Order.objects.get(id=id)
+        data_response['order'] = order
+
+        # order_items = OrderItem.objects.filter(order)
+
+    return render(request, 'order/order-detail.html', cart_info(request) | data_response)

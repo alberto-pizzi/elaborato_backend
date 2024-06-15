@@ -1,0 +1,76 @@
+{% extends 'store/index.html' %}
+{% load static %}
+
+{% block categories %}
+  <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">{% block section_title %}Your orders {% endblock section_title %}</h1>
+
+        <p class="lead text-body-secondary">{% block section_par %}Here you can find all your orders{% endblock section_par %}</p>
+      </div>
+    </div>
+  </section>
+{% endblock categories %}
+
+
+{% block content %}
+    {% if orders %}
+
+        <div class="list-group">
+        {% for order in orders %}
+          <a href="{% url 'order:order-detail' order.id %}" class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center">
+              <div class="w-100">
+                  <div class="d-flex justify-content-between">
+                              <div class="mx-4 d-flex">
+                                  <span class="me-1 text-primary fw-bold">Order n. :</span>
+                                  <span class="" > {{ order.id }}</span>
+                              </div>
+
+                              <div class="mx-4 d-flex align-items-center">
+                                  <span class="me-1 fw-bold">Send to: </span>
+                              <!-- TODO improve address visualizing -->
+                                  <span class="">{{ order.address.first_name_recipient }} {{ order.address.last_name_recipient }},
+                                  {{ order.address.address1 }}, {% if order.address.address2 %}{{ order.address.address2 }},{% endif %}
+                                  {{ order.address.state }}, {{ order.address.zip }}, {{ order.address.country }}</span>
+                              </div>
+
+
+                                <div class="mx-4 d-flex">
+                                  <span class="me-1 fw-bold">Total:</span>
+                                  <span class=""> {{ order.total_price }} $</span>
+                              </div>
+                          </div>
+                  <div class="d-flex justify-content-between">
+                              <div class="mx-4 d-flex">
+                                  <span class="me-1 fw-bold">Order placed on:</span>
+                                  <span class="" > {{ order.created_at.date }}</span>
+                              </div>
+                              <div class="mx-4 d-flex">
+                                  <span class="me-1 text-warning fw-bold">Status:</span>
+                                  <span class="" > {{ order.status }}</span>
+                              </div>
+
+
+                          </div>
+              </div>
+              <svg id="i-chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <path d="M12 30 L24 16 12 2" />
+              </svg>
+          </div>
+          </a>
+        {% endfor %}
+        </div>
+
+
+
+
+
+
+    {% else %}
+        <div class="text-center text-warning">
+        There are no orders placed
+        </div>
+    {% endif %}
+{% endblock content %}

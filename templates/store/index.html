@@ -162,13 +162,12 @@
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-between">
 
-
+        <!-- TODO review this menu -->
         <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="{% url 'store:home' %}" class="nav-link px-2 text-white">Home</a></li>
-            {% for gender in genders %}
-                <li><a href="{% url 'store:gender-store' gen=gender %}" class="nav-link px-2 text-white">{{ gender }}</a></li>
-            {% endfor %}
-
+            <li><a href="{% url 'store:home' %}" class="nav-link px-2 text-white">Home</a></li>
+            <li><a href="{% url 'store:gender-store' 'Male' %}" class="nav-link px-2 text-white">Man</a></li>
+            <li><a href="{% url 'store:gender-store' 'Female' %}" class="nav-link px-2 text-white">Woman</a></li>
+            <li><a href="{% url 'store:gender-store' 'Unisex' %}" class="nav-link px-2 text-white">Unisex</a></li>
         </ul>
 
         {% csrf_token %}
@@ -190,7 +189,7 @@
               {% endif %}
           </a>
           <ul class="dropdown-menu text-small" style="">
-            <li><a class="dropdown-item" href="#">Orders</a></li>
+            <li><a class="dropdown-item" href="{% url 'order:orders' %}">Orders</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Log out</a></li>
