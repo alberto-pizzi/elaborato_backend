@@ -159,6 +159,7 @@
       {% csrf_token %}
     <h1 class="h3 mb-3 fw-normal text-center p-3">Log in</h1>
 
+      {% include 'message-system.html' %}
     <div class="form-floating">
       <input type="text" class="form-control" id="floatingInput" name="username" placeholder="Username">
       <label for="floatingInput">Username</label>
@@ -176,6 +177,7 @@
       </label>
     </div>
     <button class="btn btn-primary w-100 py-2" type="submit">Log in</button>
+    <a class="btn btn-secondary btn-sm mt-3" href="{% url 'store:home' %}" role="button">< Return home</a>
     <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2024</p>
   </form>
 </main>

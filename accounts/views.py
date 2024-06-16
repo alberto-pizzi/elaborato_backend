@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from .models import CustomUser, Address
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
+from django.contrib import messages
 
 
 def login_view(request):
@@ -15,8 +16,9 @@ def login_view(request):
             login(request, user)
             return redirect('store:home')
         else:
-            # FIXME improve error message
-            return HttpResponse("Username or Password is incorrect!!!")
+            messages.error(request,"Username or Password is incorrect!")
+            return redirect('accounts:login')
+
 
     return render(request, 'accounts/login.html')
 
@@ -58,7 +60,12 @@ def signup_view(request):
             user_profile.save()
             user_address.save()
 
+            messages.success(request, "Registered successfully! Now please log in.")
             return redirect('accounts:login')
+        else:
+            messages.error(request, "Error during registration. Please check the entered fields.")
+            return redirect('accounts:sign-up')
+
 
     return render(request, 'accounts/sign-up.html')
 

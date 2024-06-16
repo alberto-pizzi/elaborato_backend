@@ -10,7 +10,7 @@
     </symbol>
 </svg>
 {% if messages %}
-    <ul class="messages">
+    <ul class="messages w-100 px-1">
         {% for message in messages %}
             <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %} d-flex align-items-center"
                  role="alert">
@@ -49,6 +49,6 @@
                     message.remove();
                 }, 500);
             });
-        }, 3000);
+        }, 5000);
     });
 </script>
