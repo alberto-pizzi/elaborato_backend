@@ -164,7 +164,7 @@
       <div class="col-md-7 col-lg-8 mx-auto">
           {% include 'message-system.html' %}
         <h4 class="mb-3">Insert your data</h4>
-        <form action="" method="POST" class="needs-validation" novalidate="" onsubmit="return validateForm()"  >
+        <form action="" id="signup-form" method="POST" class="needs-validation" novalidate="" onsubmit="return validateForm()"  >
             {% csrf_token %}
           <div class="row g-3">
 
@@ -197,7 +197,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="{%  static 'assets/dist/js/bootstrap.bundle.min.js'%}"></script>
-<script src="{% static 'assets/dist/js/checkout.js'%}"></script>
+<!-- TODO checkout.js removed -->
 <script src="{% static  'assets/dist/js/form-validation.js' %}"></script>
 
   </body>

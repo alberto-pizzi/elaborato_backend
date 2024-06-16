@@ -62,9 +62,40 @@ function checkUsername(alreadyExists) {
     }
 }
 
+function isEmailValid() {
+    let emailField = $('#email');
+    let email = emailField.val().trim()
+    let errorField = $('#email-error-message');
+    errorField.text('Your email is invalid.');
+
+    if (email.includes('@') && email.includes('.') && email.length >= 5) {
+        returnSuccess(true, emailField);
+        return true;
+    } else {
+        returnSuccess(false, emailField);
+        return false;
+    }
+}
+
+function isPasswordValid() {
+    let passwordField = $('#password1');
+    let password = passwordField.val().trim()
+    //let errorField = $('#email-error-message');
+    //errorField.text('Your email is invalid.');
+
+    if (password.length >= 8) {
+        returnSuccess(true, passwordField);
+        return true;
+    } else {
+        returnSuccess(false, passwordField);
+        return false;
+    }
+}
+
+
 $('#password1').on('blur', function () {
     let pass1 = $(this).val().trim();
-    checkPassword(pass1, this);
+    checkPassword(pass1, $(this));
 
 });
 
@@ -130,4 +161,19 @@ $('#email').on('blur', function () {
             }
         });
     }
+});
+
+
+// TODO implement form validation
+$('#signup-form').on('submit', function(event) {
+    // Rimuovi le classi di validazione da tutti i campi
+    //$('.form-control').removeClass('is-valid is-invalid');
+
+    let valid = true;
+    valid = isPasswordValid()
+
+    if (!valid) {
+        event.preventDefault();
+    }
+
 });

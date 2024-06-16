@@ -23,38 +23,63 @@ def login_view(request):
     return render(request, 'accounts/login.html')
 
 
-def signup_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        if not CustomUser.objects.filter(username=username).exists() and not CustomUser.objects.filter(email=email).exists():
-            password = request.POST.get('password')
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            address1 = request.POST.get('address1')
-            address2 = request.POST.get('address2')
-            country = request.POST.get('country')
-            state = request.POST.get('state')
-            zip = request.POST.get('zip')
 
+def email_is_valid(email):
+    if email:
+        exists = CustomUser.objects.filter(email=email).exists()
+        if len(email) >= 5 and ("@" in email) and ("." in email) and not exists:
+            return True
+    return False
+
+def username_is_valid(username):
+    if username:
+        exists = CustomUser.objects.filter(username=username).exists()
+        if not exists:
+            return True
+    return False
+
+def password_is_valid(password):
+    if password:
+        if len(password) >= 8:
+            return True
+    return False
+
+
+
+def signup_view(request):
+    fields = {}
+    if request.method == 'POST':
+
+        fields['username'] = request.POST.get('username')
+        fields['email'] = request.POST.get('email')
+        password = request.POST.get('password')
+        fields['first_name'] = request.POST.get('first_name')
+        fields['last_name'] = request.POST.get('last_name')
+        fields['address1'] = request.POST.get('address1')
+        fields['address2'] = request.POST.get('address2')
+        fields['country'] = request.POST.get('country')
+        fields['state'] = request.POST.get('state')
+        fields['zip'] = request.POST.get('zip')
+
+        if username_is_valid(fields['username']) and email_is_valid(fields['email']) and password_is_valid(password):
             user_profile = CustomUser.objects.create_user(
-                username=username,
-                email=email,
+                username=fields['username'],
+                email=fields['email'],
                 password=password,
-                first_name=first_name,
-                last_name=last_name
+                first_name=fields['first_name'],
+                last_name=fields['last_name']
             )
 
             user_address = Address(
                 user=user_profile,
-                nickname=first_name + ' ' + last_name + ' ' + address1,
-                first_name_recipient=first_name,
-                last_name_recipient=last_name,
-                address1=address1,
-                address2=address2,
-                country=country,
-                state=state,
-                zip=zip
+                nickname=fields['first_name'] + ' ' + fields['last_name'] + ' ' + fields['address1'],
+                first_name_recipient=fields['first_name'],
+                last_name_recipient=fields['last_name'],
+                address1=fields['address1'],
+                address2=fields['address2'],
+                country=fields['country'],
+                state=fields['state'],
+                zip=fields['zip']
             )
 
             user_profile.save()
@@ -63,11 +88,17 @@ def signup_view(request):
             messages.success(request, "Registered successfully! Now please log in.")
             return redirect('accounts:login')
         else:
-            messages.error(request, "Error during registration. Please check the entered fields.")
-            return redirect('accounts:sign-up')
+            if not username_is_valid(fields['username']):
+                messages.error(request, "Error: username is invalid")
+            elif not email_is_valid(fields['email']):
+                messages.error(request, "Error: email is invalid")
+            elif not password_is_valid(password):
+                messages.error(request, "Error: password is invalid")
+            else:
+                messages.error(request, "Error during registration. Please check the entered fields.")
+            return render(request, 'accounts/sign-up.html',fields)
 
-
-    return render(request, 'accounts/sign-up.html')
+    return render(request, 'accounts/sign-up.html',fields)
 
 
 def logout_view(request):
@@ -77,7 +108,7 @@ def logout_view(request):
 def check_username(request):
     username = request.POST.get('username')
     if username:
-        if CustomUser.objects.filter(username=username).exists():
+        if not username_is_valid(username):
             return JsonResponse({'exists': True})
         else:
             return JsonResponse({'exists': False})
@@ -86,7 +117,7 @@ def check_username(request):
 def check_email(request):
     email = request.POST.get('email')
     if email:
-        if CustomUser.objects.filter(email=email).exists():
+        if not email_is_valid(email):
             return JsonResponse({'exists': True})
         else:
             return JsonResponse({'exists': False})

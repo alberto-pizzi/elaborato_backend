@@ -1,7 +1,7 @@
 {% block address %}
 <div class="col-12">
   <label for="address" class="form-label">Address</label>
-  <input type="text" class="form-control" id="address" name="address1" placeholder="1234 Main St" required="">
+  <input type="text" class="form-control" id="address" name="address1" placeholder="1234 Main St" required="" value="{{ address1 }}">
   <div class="invalid-feedback">
     Please enter your shipping address.
   </div>
@@ -9,7 +9,7 @@
 
 <div class="col-12">
   <label for="address2" class="form-label">Address 2 <span class="text-body-secondary">(Optional)</span></label>
-  <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment or suite">
+  <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment or suite" value="{{ address2 }}">
 </div>
 
 <div class="col-md-5">
@@ -36,7 +36,7 @@
 
 <div class="col-md-3">
   <label for="zip" class="form-label">Zip</label>
-  <input type="text" class="form-control" id="zip" name="zip" placeholder="" required="">
+  <input type="text" class="form-control" id="zip" name="zip" placeholder="" required="" value="{{ zip }}">
   <div class="invalid-feedback">
     Zip code required.
   </div>
