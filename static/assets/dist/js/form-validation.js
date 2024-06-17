@@ -1,9 +1,41 @@
 function validateForm() {
 
+    // FIXME improve server-side validation (Ajax response)
     let pass1 = $('#password1');
-    let email = $('#email');
+    let pass2 = $('#password2');
 
-    return checkPassword(pass1.val().trim(), pass1) && checkPassword(email.val().trim(), email);
+    let valid = true;
+
+
+
+    const excludedIds = ['email', 'password1', 'password2','username'];
+
+    const requiredFields = document.querySelectorAll('#signup-form input[required],#signup-form select[required]');
+
+    if (!validatePassword() || !validateEmail()){
+        valid = false;
+    }
+
+
+    requiredFields.forEach(field => {
+
+
+
+        if (!excludedIds.includes(field.id)) {
+
+        if (field.value !== ''){
+            returnSuccess(true,field);
+        }
+        else{
+            valid = false;
+            returnSuccess(false,field);
+        }
+
+        }
+    });
+
+
+    return valid;
 
 }
 
@@ -17,12 +49,33 @@ function returnSuccess(isSuccess, inputField) {
     }
 }
 
-function checkPassword(passwordInput, passwordField) {
-    if (passwordInput !== '' && passwordInput.length >= 8) {
+function validatePassword() {
+    const passwordField = $('#password1')
+    const passwordInput = passwordField.val().trim();
+
+    const hasUpper = /[A-Z]/.test(passwordInput);
+    const hasLower = /[a-z]/.test(passwordInput);
+    const hasNumber = /\d/.test(passwordInput);
+
+    if (hasUpper && hasLower && hasNumber) {
         returnSuccess(true, passwordField);
         return true;
     } else {
         returnSuccess(false, passwordField);
+        return false;
+    }
+
+}
+
+function checkConfirmPassword(){
+    let pass1 = $('#password1').val().trim();
+    let pass2 = $('#password2');
+
+    if (pass2.val().trim() !== '' && pass1 === pass2.val().trim() && validatePassword()) {
+        returnSuccess(true, pass2);
+        return true;
+    } else {
+        returnSuccess(false, pass2);
         return false;
     }
 }
@@ -77,6 +130,24 @@ function isEmailValid() {
     }
 }
 
+function validateEmail(e) {
+  const email = document.querySelector('#email');
+  const re = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+  const reSpaces = /^\S*$/;
+
+  if (reSpaces.test(email.value) && re.test(email.value)) {
+    email.classList.remove('is-invalid');
+    email.classList.add('is-valid');
+
+    return true;
+  } else {
+    email.classList.add('is-invalid');
+    email.classList.remove('is-valid');
+
+    return false;
+  }
+}
+
 function isPasswordValid() {
     let passwordField = $('#password1');
     let password = passwordField.val().trim()
@@ -95,28 +166,26 @@ function isPasswordValid() {
 
 $('#password1').on('blur', function () {
     let pass1 = $(this).val().trim();
-    checkPassword(pass1, $(this));
+    validatePassword();
+    checkConfirmPassword();
 
 });
 
 $('#password2').on('blur', function () {
-    let pass1 = $('#password1').val().trim();
-    let pass2 = $(this).val().trim();
-
-    if (pass2 !== '' && pass1 === pass2) {
-        returnSuccess(true, this);
-    } else {
-        returnSuccess(false, this);
-    }
+    checkConfirmPassword();
 });
 
+/*
 $('#email').on('blur', function () {
     let email = $(this).val().trim();
     checkEmail(email, this);
 });
 
-$('#username').on('blur', function () {
-    let username = $(this).val().trim();
+ */
+
+
+function checkUsernameWithServer(usernameField){
+    let username = $(usernameField).val().trim();
     if (username) {
         let ajax_url = document.getElementById('check-username').value;
         let token = $('input[name=csrfmiddlewaretoken]').val();
@@ -137,10 +206,14 @@ $('#username').on('blur', function () {
             }
         });
     }
+}
+
+$('#username').on('blur', function () {
+    checkUsernameWithServer(this);
 });
 
-$('#email').on('blur', function () {
-    let email = $(this).val().trim();
+function checkEmailWithServer(emailField){
+    let email = $(emailField).val().trim();
     if (email) {
         let ajax_url = document.getElementById('check-email').value;
         let token = $('input[name=csrfmiddlewaretoken]').val();
@@ -161,19 +234,42 @@ $('#email').on('blur', function () {
             }
         });
     }
+}
+
+
+$('#email').on('blur', function () {
+    checkEmailWithServer(this)
 });
 
 
 // TODO implement form validation
-$('#signup-form').on('submit', function(event) {
-    // Rimuovi le classi di validazione da tutti i campi
-    //$('.form-control').removeClass('is-valid is-invalid');
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById("signup-form");
 
-    let valid = true;
-    valid = isPasswordValid()
+    form.addEventListener(
+        "submit",
+        (e) => {
 
-    if (!valid) {
-        event.preventDefault();
-    }
 
+            let email = $('#email');
+            let username = $('#username');
+            checkUsernameWithServer(username);
+            checkEmailWithServer(email);
+
+            if (!form.checkValidity() ||
+          !validateEmail() ) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            else{
+                form.classList.add("was-validated");
+            }
+
+
+
+
+            console.log("submit");
+        },
+        false
+    );
 });

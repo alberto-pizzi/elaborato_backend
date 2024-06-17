@@ -5,6 +5,7 @@ from .models import CustomUser, Address
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.contrib import messages
+import re
 
 
 def login_view(request):
@@ -19,9 +20,7 @@ def login_view(request):
             messages.error(request,"Username or Password is incorrect!")
             return redirect('accounts:login')
 
-
     return render(request, 'accounts/login.html')
-
 
 
 def email_is_valid(email):
@@ -31,6 +30,7 @@ def email_is_valid(email):
             return True
     return False
 
+
 def username_is_valid(username):
     if username:
         exists = CustomUser.objects.filter(username=username).exists()
@@ -38,12 +38,15 @@ def username_is_valid(username):
             return True
     return False
 
+
 def password_is_valid(password):
     if password:
-        if len(password) >= 8:
+        has_upper = bool(re.search(r'[A-Z]', password))
+        has_lower = bool(re.search(r'[a-z]', password))
+        has_number = bool(re.search(r'\d', password))
+        if has_upper and has_lower and has_number and len(password) >= 8:
             return True
     return False
-
 
 
 def signup_view(request):

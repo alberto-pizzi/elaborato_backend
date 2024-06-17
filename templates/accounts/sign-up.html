@@ -164,7 +164,7 @@
       <div class="col-md-7 col-lg-8 mx-auto">
           {% include 'message-system.html' %}
         <h4 class="mb-3">Insert your data</h4>
-        <form action="" id="signup-form" method="POST" class="needs-validation" novalidate="" onsubmit="return validateForm()"  >
+        <form action="" id="signup-form" method="POST" class="needs-validation" onsubmit="return validateForm()" novalidate>
             {% csrf_token %}
           <div class="row g-3">
 

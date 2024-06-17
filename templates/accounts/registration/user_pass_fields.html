@@ -10,16 +10,18 @@
   <div class="invalid-feedback" id="username-error-message">
       Your username is required.
     </div>
+      <div class="valid-feedback">Looks Good!</div>
   </div>
 </div>
 {% endblock username %}
 {% block password %}
 <div class="col-sm-6">
   <label for="lastName" class="form-label">Password</label>
-  <input type="password" class="form-control required-field" id="password1" name="password" placeholder="" value="" required="">
+  <input type="password" class="form-control required-field" id="password1" name="password" placeholder="" value="" required="" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
   <div class="invalid-feedback">
-    Password must have at least 8 characters.
+    Password must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters.
   </div>
+  <div class="valid-feedback">Looks Good!</div>
 </div>
 {% endblock password %}
 
