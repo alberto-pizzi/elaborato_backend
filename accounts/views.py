@@ -6,16 +6,30 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.contrib import messages
 import re
+from django.conf import settings
 
 
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         pass1 = request.POST.get('password')
+        remember_me = bool(request.POST.get('remember-me'))
+
+
         user = authenticate(request, username=username, password=pass1)
         if user is not None:
-            login(request, user)
-            return redirect('store:home')
+            if user.is_active:
+                login(request, user)
+
+                if not remember_me:
+                    request.session.set_expiry(0)
+                else:
+                    request.session.set_expiry(settings.SESSION_REMEMBER_TIMEOUT)
+
+                return redirect('store:home')
+            else:
+                messages.error(request, 'Sorry, your account is disabled.')
+                return redirect('store:home')
         else:
             messages.error(request,"Username or Password is incorrect!")
             return redirect('accounts:login')

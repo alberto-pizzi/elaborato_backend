@@ -33,8 +33,11 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Session
 # 30 minutes of inactivity
-SESSION_EXPIRE_SECONDS = 1800
+SESSION_EXPIRE_SECONDS = 60 * 30
 SESSION_COOKIE_AGE = SESSION_EXPIRE_SECONDS
+
+# Remember me duration (2 weeks)
+SESSION_REMEMBER_TIMEOUT = 60 * 60 * 24 * 14
 
 
 # Application definition
