@@ -15,21 +15,21 @@
         {% for address in addresses %}
             <li class="list-group-item">
             
-                <div class="d-flex justify-content-between px-2 align-content-center align-items-center">
+                <div class="d-flex justify-content-between px-2 align-content-center align-items-center flex-wrap overflow-hidden">
                     
                     <div class="d-flex text-primary">
-                        {{ address.nickname }}
+                        {{ address.address.nickname }}
                     </div>
                     
                     <div class="d-flex flex-column">
-                    <span class="fw-bold text-center">{{ address.first_name_recipient }} {{ address.last_name_recipient }}</span>
+                    <span class="fw-bold text-center">{{ address.address.first_name_recipient }} {{ address.address.last_name_recipient }}</span>
                       <span class="">
-                      {{ address.address1 }}, {% if address.address2 %}{{ address.address2 }},{% endif %}
-                      {{ address.state }}, {{ address.zip }}, {{ address.country }}</span>
+                      {{ address.address.address1 }}, {% if address.address.address2 %}{{ address.address.address2 }},{% endif %}
+                      {{ address.address.state }}, {{ address.address.zip }}, {{ address.address.country }}</span>
                     </div>
                     
                     <div class="d-flex justify-content-between">
-                        <a class="btn btn-outline-secondary mx-1" href="#" role="button">Edit</a>
+                        <a class="btn btn-outline-secondary mx-1" href="{% url 'accounts:edit-address' address.encrypted_id %}" role="button">Edit</a>
                         <a class="btn btn-outline-danger mx-1" href="#" role="button">Delete</a>
                     </div>
                 </div>
@@ -38,17 +38,13 @@
         {% endfor %}
         </div>
 
-
-
-
-
-
+        
     {% else %}
         <div class="text-center text-warning">
         There are no addresses saved
         </div>
     {% endif %}
-    
+
     <div class="d-flex justify-content-center mt-3">
         <a class="btn btn-success mx-1" href="{% url 'accounts:add-address' %}" role="button">Add address</a>
     </div>

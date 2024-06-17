@@ -14,23 +14,17 @@
 
 <div class="col-md-5">
   <label for="country" class="form-label">Country</label>
-  <select class="form-select" id="country" name="country" required="">
-    <option value="">Choose...</option>
-    <option>United States</option>
-  </select>
+  <input type="text" class="form-control" id="country" name="country" placeholder="USA..." required="" value="{{ country }}">
   <div class="invalid-feedback">
-    Please select a valid country.
+    Please enter your country.
   </div>
 </div>
 
 <div class="col-md-4">
   <label for="state" class="form-label">State</label>
-  <select class="form-select" id="state" name="state" required="">
-    <option value="">Choose...</option>
-    <option>California</option>
-  </select>
+  <input type="text" class="form-control" id="state" name="state" placeholder="California..." required="" value="{{ state }}">
   <div class="invalid-feedback">
-    Please provide a valid state.
+    Please enter your state.
   </div>
 </div>
 

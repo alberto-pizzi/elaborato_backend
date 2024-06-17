@@ -8,6 +8,8 @@ from django.contrib import messages
 import re
 from django.conf import settings
 
+from .templatetags.hashid_filters import encode_id, decode_id
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -150,8 +152,15 @@ def profile(request):
         user_id = request.user.id
         addresses = Address.objects.filter(user=user_id).all()
         data_response['addresses'] = addresses
+        encrypted_addresses = []
+        for address in addresses:
+            encrypted_id = encode_id(address.id)
+            encrypted_addresses.append({
+                'address': address,
+                'encrypted_id': encrypted_id
+            })
 
-
+        data_response['addresses'] = encrypted_addresses
 
     return render(request, 'accounts/profile.html',  data_response)
 
@@ -210,3 +219,32 @@ def add_address(request):
         messages.error(request, "Error: you must be logged in to add an address.")
 
     return render(request, 'accounts/add-address.html',  data_response)
+
+
+def edit_address(request,encoded_id):
+    data_response = {
+        'can_edit': False
+    }
+    fields = {}
+
+    if request.user.is_authenticated:
+
+        decoded_id = decode_id(encoded_id)
+
+        user_profile = CustomUser.objects.get(id=request.user.id)
+
+        address = Address.objects.get(id=decoded_id, user=user_profile)
+
+        if user_profile and address:
+            data_response['can_edit'] = True
+
+        fields['address_nick'] = address.nickname
+        fields['first_name'] = address.first_name_recipient
+        fields['last_name'] = address.last_name_recipient
+        fields['address1'] = address.address1
+        fields['address2'] = address.address2
+        fields['country'] = address.country
+        fields['state'] = address.state
+        fields['zip'] = address.zip
+
+    return render(request, 'accounts/edit-address.html', data_response | fields)
