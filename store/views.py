@@ -8,6 +8,7 @@ from order.models import CartItem
 from django.db.models import Q
 from django.http import JsonResponse
 from django.db.models import Subquery
+from django.contrib import messages
 
 
 def header_data(request):
@@ -37,6 +38,7 @@ def header_data(request):
 
 
 def index(request):
+
     total_latest_shown = 6
     products = ProductVariant.objects.select_related('product').all().order_by('-product__date_added')[:total_latest_shown]
 

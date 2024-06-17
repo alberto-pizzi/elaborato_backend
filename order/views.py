@@ -15,7 +15,7 @@ def get_or_create_cart(request):
     if request.user.is_authenticated:
         cart, created = Cart.objects.get_or_create(user=request.user)
     else:
-        # Utente anonimo: Usa la sessione per memorizzare l'ID del carrello
+        # Anonymous user: Use the session to store the cart ID
         session_cart_id = request.session.get('cart_id')
         if session_cart_id:
             cart, created = Cart.objects.get_or_create(session_id=session_cart_id)
@@ -209,6 +209,7 @@ def checkout(request):
                 )
 
             cart.delete()
+            messages.success(request, "Your order (n. " + str(order.id) + ") is placed successfully")
             return redirect('store:home')
 
         else:
