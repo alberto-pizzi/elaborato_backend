@@ -14,21 +14,21 @@
                 Please enter your custom name for this address.
               </div>
             </div>
-        
-        
+
+
             {% include 'accounts/registration/name_fields.html' %}
             {% include 'accounts/registration/address_fields.html' %}
             <hr class="my-4">
             <button class="btn btn-primary" type="submit">Save</button>
-        
+
             <a class="btn btn-outline-secondary btn-sm mt-3" href="{% url 'accounts:profile' %}" role="button">< Go back</a>
-        
+
             </form>
         {% else %}
             <div class="text-center text-warning">
                 You are not able to edit this address.
             </div>
-            
+
         {% endif %}
     {% endif %}
 

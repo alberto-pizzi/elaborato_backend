@@ -11,6 +11,7 @@ urlpatterns = [
     path('action/check-email', views.check_email, name='check-email'),
     path('profile/', views.profile, name='profile'),
     path('profile/add-address', views.add_address, name='add-address'),
-    path('profile/edit-address/<str:encoded_id>', views.edit_address, name='edit-address')
+    path('profile/edit-address/<str:encoded_id>', views.edit_address, name='edit-address'),
+    path('profile/delete-address/<str:encoded_id>', views.delete_address, name='delete-address')
 ]
 

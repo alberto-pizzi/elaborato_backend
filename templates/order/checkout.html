@@ -95,6 +95,12 @@
                     There is no address
                     {% endif %}
                 </div>
+                <div class="d-flex justify-content-center mt-3">
+                    <!-- TODO improve "go back" function if from checkout -->
+                    <a class="btn btn-outline-success mx-1" href="{% url 'accounts:add-address' %}" role="button">Add address</a>
+                    <a class="btn btn-outline-secondary mx-1" href="{% url 'accounts:profile' %}" role="button">Manage addresses</a>
+                </div>
+
           </fieldset>
               {% include 'order/payment.html' %}
               </form>

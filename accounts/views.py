@@ -146,6 +146,7 @@ def profile(request):
 
     data_response = {
         'addresses': None
+
     }
 
     if request.user.is_authenticated:
@@ -248,3 +249,27 @@ def edit_address(request,encoded_id):
         fields['zip'] = address.zip
 
     return render(request, 'accounts/edit-address.html', data_response | fields)
+
+
+def delete_address(request,encoded_id):
+    data_response = {
+        'can_edit': False
+    }
+
+
+    if request.user.is_authenticated:
+
+        decoded_id = decode_id(encoded_id)
+
+        user_profile = CustomUser.objects.get(id=request.user.id)
+        address = Address.objects.get(id=decoded_id, user=user_profile)
+        success_message = 'Address ' + str(address.nickname) + ' deleted successfully'
+
+        if user_profile and address:
+            address.delete()
+
+            messages.success(request, success_message)
+            return redirect('accounts:profile')
+
+    messages.error(request, 'Deletion failed ')
+    return redirect('accounts:profile')
