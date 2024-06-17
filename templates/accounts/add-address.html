@@ -1,0 +1,32 @@
+{% extends 'accounts/profile.html' %}
+{% load static %}
+
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <form method="POST" class="row g-3 container needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="col-12">
+          <label for="address-nick" class="form-label">Address custom name <span class="text-body-secondary">(Optional)</span></label>
+          <input type="text" class="form-control" id="address-nick" name="address_nick" placeholder="Insert a custom name for this address..." value="">
+          <div class="invalid-feedback">
+            Please enter your custom name for this address.
+          </div>
+        </div>
+    
+    
+        {% include 'accounts/registration/name_fields.html' %}
+        {% include 'accounts/registration/address_fields.html' %}
+        <hr class="my-4">
+        <button class="btn btn-primary" type="submit">Save</button>
+    
+        <a class="btn btn-outline-secondary btn-sm mt-3" href="{% url 'accounts:profile' %}" role="button">< Go back</a>
+    
+        </form>
+    {% endif %}
+
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'assets/dist/js/bootstrap-form-validation.js' %}"></script>
+{% endblock scripts %}

@@ -139,3 +139,74 @@ def check_email(request):
         else:
             return JsonResponse({'exists': False})
     return JsonResponse({'error': 'Username not provided'}, status=400)
+
+def profile(request):
+
+    data_response = {
+        'addresses': None
+    }
+
+    if request.user.is_authenticated:
+        user_id = request.user.id
+        addresses = Address.objects.filter(user=user_id).all()
+        data_response['addresses'] = addresses
+
+
+
+    return render(request, 'accounts/profile.html',  data_response)
+
+
+
+def add_address(request):
+
+    data_response = {
+        'addresses': None
+    }
+
+    fields = {}
+
+    if request.user.is_authenticated:
+        user_id = request.user.id
+        addresses = Address.objects.filter(user=user_id).all()
+        data_response['addresses'] = addresses
+
+        if request.method == 'POST':
+            fields['address_nick'] = request.POST.get('address_nick')
+            fields['first_name'] = request.POST.get('first_name')
+            fields['last_name'] = request.POST.get('last_name')
+            fields['address1'] = request.POST.get('address1')
+            fields['address2'] = request.POST.get('address2')
+            fields['country'] = request.POST.get('country')
+            fields['state'] = request.POST.get('state')
+            fields['zip'] = request.POST.get('zip')
+
+            if fields['address_nick']:
+                nick = fields['address_nick']
+            else:
+                nick = fields['first_name'] + ' ' + fields['last_name'] + ' ' + fields['address1']
+
+            if fields['first_name'] and fields['last_name'] and fields['address1'] and fields['country'] and fields['state'] and fields['zip']:
+                user_profile = CustomUser.objects.get(id=user_id);
+                user_address = Address(
+                    user=user_profile,
+                    nickname=nick,
+                    first_name_recipient=fields['first_name'],
+                    last_name_recipient=fields['last_name'],
+                    address1=fields['address1'],
+                    address2=fields['address2'],
+                    country=fields['country'],
+                    state=fields['state'],
+                    zip=fields['zip']
+                )
+
+                user_address.save()
+
+                messages.success(request, "Your address has been added successfully!")
+                return redirect('accounts:profile')
+            else:
+                messages.error(request, "Error adding your address, please try again.")
+                return redirect('accounts:add-address')
+    else:
+        messages.error(request, "Error: you must be logged in to add an address.")
+
+    return render(request, 'accounts/add-address.html',  data_response)

@@ -190,7 +190,7 @@
           </a>
           <ul class="dropdown-menu text-small" style="">
             <li><a class="dropdown-item" href="{% url 'order:orders' %}">Orders</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Log out</a></li>
           </ul>
@@ -234,9 +234,9 @@
       <section class="py-5 text-center container">
             <div class="row py-lg-5">
           <div class="col-lg-6 col-md-8 mx-auto">
-            <h1 class="fw-light">Latest arrivals</h1>
+            <h1 class="fw-light">{% block section_title %}Latest arrivals{% endblock section_title %}</h1>
 
-            <p class="lead text-body-secondary">Choose a category to start shopping</p>
+            <p class="lead text-body-secondary">{% block section_par %}Choose a category to start shopping{% endblock section_par %}</p>
           </div>
         </div>
       </section>
@@ -247,8 +247,9 @@
   <div class="album py-5 bg-body-tertiary">
   
     <div class="container">
-        {% include 'message-system.html' %}
+    {% include 'message-system.html' %} 
         {% block content %}
+        
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
       <!-- TODO connect buttons with database-->
