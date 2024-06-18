@@ -63,14 +63,23 @@ class Order(models.Model):
     total_products = models.PositiveIntegerField(null=False,blank=False,editable=False)
     total_price = models.DecimalField(max_digits=10, decimal_places=2,null=False,blank=False,default=0,editable=False)
     payment_method = models.CharField(max_length=20,choices=PAYMENT_METHODS,null=False,blank=False,editable=False)
-    address = models.ForeignKey(Address, on_delete=models.PROTECT,null=True,blank=True)
+
+    shipping_nickname = models.CharField(max_length=255, blank=True, null=True)
+    shipping_first_name_recipient = models.CharField(max_length=255, blank=True, null=True)
+    shipping_last_name_recipient = models.CharField(max_length=255, blank=True, null=True)
+    shipping_address1 = models.CharField(max_length=255, blank=False, null=True)
+    shipping_address2 = models.CharField(max_length=255, blank=True, null=True)
+    shipping_country = models.CharField(max_length=255, blank=False, null=True)
+    shipping_state = models.CharField(max_length=255, blank=False, null=True)
+    shipping_zip = models.CharField(max_length=20, blank=False, null=True)
+
     status = models.CharField(max_length=20, choices=OrderStatus.choices(), default=OrderStatus.PENDING.value)
 
     def __str__(self):
         if self.user:
             return 'Order n.: ' + f'{self.id} x {self.user.first_name + self.user.last_name}'
         else:
-            return 'Order n.: ' + f'{self.id} x {self.address.first_name_recipient + self.address.last_name_recipient}'
+            return 'Order n.: ' + f'{self.id} x {self.shipping_first_name_recipient + self.shipping_last_name_recipient}'
 
 
 

@@ -187,11 +187,19 @@ def checkout(request):
                     return redirect('order:checkout')
 
             # create an order
+
             order = Order(
                 user=user_profile,
                 total_products=cart.total_items(),
                 total_price=cart.total_price(),
-                address=user_address,
+                shipping_nickname=user_address.nickname,
+                shipping_first_name_recipient=user_address.first_name_recipient,
+                shipping_last_name_recipient=user_address.last_name_recipient,
+                shipping_address1=user_address.address1,
+                shipping_address2=user_address.address2,
+                shipping_country=user_address.country,
+                shipping_state=user_address.state,
+                shipping_zip=user_address.zip,
                 payment_method=payment_method
             )
             order.save()

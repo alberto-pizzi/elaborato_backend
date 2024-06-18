@@ -22,10 +22,9 @@
 
           <div class="mx-4 d-flex align-items-center overflow-hidden">
               <span class="me-1 fw-bold">Send to: </span>
-          <!-- TODO improve address visualizing -->
-              <span class="">{{ order.address.first_name_recipient }} {{ order.address.last_name_recipient }},
-              {{ order.address.address1 }}, {% if order.address.address2 %}{{ order.address.address2 }},{% endif %}
-              {{ order.address.state }}, {{ order.address.zip }}, {{ order.address.country }}</span>
+              <span class="">{{ order.shipping_first_name_recipient }} {{ order.shipping_last_name_recipient }},
+              {{ order.shipping_address1 }}, {% if order.shipping_address2 %}{{ order.shipping_address2 }},{% endif %}
+              {{ order.shipping_state }}, {{ order.shipping_zip }}, {{ order.shipping_country }}</span>
           </div>
 
 
