@@ -107,13 +107,17 @@ def signup_view(request):
             messages.success(request, "Registered successfully! Now please log in.")
             return redirect('accounts:login')
         else:
+            found_invalid = False
             if not username_is_valid(fields['username']):
+                found_invalid = True
                 messages.error(request, "Error: username is invalid")
-            elif not email_is_valid(fields['email']):
+            if not email_is_valid(fields['email']):
+                found_invalid = True
                 messages.error(request, "Error: email is invalid")
-            elif not password_is_valid(password):
+            if not password_is_valid(password):
+                found_invalid = True
                 messages.error(request, "Error: password is invalid")
-            else:
+            if not found_invalid:
                 messages.error(request, "Error during registration. Please check the entered fields.")
             return render(request, 'accounts/sign-up.html',fields)
 

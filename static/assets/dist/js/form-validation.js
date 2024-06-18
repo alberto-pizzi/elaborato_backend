@@ -148,11 +148,30 @@ function validateEmail(e) {
   }
 }
 
+function validateUsername(e) {
+  const username = document.querySelector('#username');
+  const errorField = $('#username-error-message');
+    errorField.text('Username is required.');
+
+
+  if (username.value !== '') {
+    username.classList.remove('is-invalid');
+    username.classList.add('is-valid');
+
+    return true;
+  } else {
+    username.classList.add('is-invalid');
+    username.classList.remove('is-valid');
+
+    return false;
+  }
+}
+
+
 function isPasswordValid() {
     let passwordField = $('#password1');
     let password = passwordField.val().trim()
-    //let errorField = $('#email-error-message');
-    //errorField.text('Your email is invalid.');
+
 
     if (password.length >= 8) {
         returnSuccess(true, passwordField);
@@ -210,6 +229,7 @@ function checkUsernameWithServer(usernameField){
 
 $('#username').on('blur', function () {
     checkUsernameWithServer(this);
+    validateUsername();
 });
 
 function checkEmailWithServer(emailField){
