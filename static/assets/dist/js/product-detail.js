@@ -135,7 +135,7 @@ $('.add-to-cart').click(function (e){
        dataType: "json",
        success: function (response){
            getTotalItems(response);
-           showNotification(response)
+           showNotification(response);
        },
        error: getAjaxErrorMessage
    });

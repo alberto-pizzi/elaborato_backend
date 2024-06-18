@@ -40,7 +40,7 @@ def header_data(request):
 def index(request):
 
     total_latest_shown = 6
-    products = ProductVariant.objects.select_related('product').all().order_by('-product__date_added')[:total_latest_shown]
+    products = ProductVariant.objects.select_related('product').filter(quantity__gt=0).all().order_by('-product__date_added')[:total_latest_shown]
 
     data = {
         'products': products,
@@ -82,7 +82,10 @@ def update_product_info(request):
         new_prod = ProductVariant.objects.filter(product_id=prod_id, color_id=prod_color_id).first()
         new_price = new_prod.price
 
-        new_image_url = new_prod.image_id.image.url
+        if new_prod.image_id:
+            new_image_url = new_prod.image_id.image.url
+        else:
+            new_image_url = None
 
 
         data_response = {
@@ -123,7 +126,7 @@ def product_detail(request, gen, category, id):
     return render(request, 'store/product-detail.html', data | header_data(request))
 
 def store_view(request, gen):
-    products = ProductVariant.objects.select_related('product').filter(Q(product__gender=gen) | Q(product__gender='Unisex'))
+    products = ProductVariant.objects.select_related('product').filter(Q(quantity__gt=0) & (Q(product__gender=gen) | Q(product__gender='Unisex')))
 
     data = {
         'products': products,
@@ -135,7 +138,7 @@ def store_view(request, gen):
 
 def category_view(request, gen, category):
 
-    products = ProductVariant.objects.select_related('product__category', 'product').filter(Q(product__category__category_slug=category) & (Q(product__gender=gen) | Q(product__gender='Unisex')) )
+    products = ProductVariant.objects.select_related('product__category', 'product').filter(Q(quantity__gt=0) & Q(product__category__category_slug=category) & (Q(product__gender=gen) | Q(product__gender='Unisex')) )
 
     data = {
         'products': products,
@@ -163,7 +166,7 @@ def search_view(request):
                     Q(color__color_name__icontains=keyword) |
                     Q(size__size_name__icontains=keyword)
                 )
-            products = ProductVariant.objects.select_related('product', 'color', 'size').filter(query_objects).distinct()
+            products = ProductVariant.objects.select_related('product', 'color', 'size').filter(query_objects, quantity__gt=0).distinct()
         else:
             return redirect('store:home')
 

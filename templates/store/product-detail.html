@@ -9,6 +9,7 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+    {% include 'message-system.html' %} 
     <div class="alert alert-dismissible fade show d-none" role="alert" id="notification-banner">
           <span id="notification-text"></span>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -23,19 +24,10 @@
         <p class="lead">{{ product.product.description }}</p>
         <p class="">Gender: {{ product.product.gender }}</p>
 
-        <div class="d-flex">
+        <div class="d-flex flex-column">
         
-            <div class="mb-3 me-5 fit-content">
-                <label for="select-quantity" class="form-label">Quantity: </label>
-                <select class="form-select " id="select-quantity">
-                  <option selected="" value="1">1</option>
-                    {% for i in quantities %}
-                        <option value="{{ i }}">{{ i }}</option>
-                    {% endfor %}
-                    <option value="20+">20+</option>
-                </select>
-                <input class="form-control d-none" type="number" id="select-quantity" min="20">
-              </div>
+            
+            {% if colors %}
             <div class="mb-3 me-3 fit-content">
                 <label for="select-color" class="form-label">Available colors: </label>
                 <select class="form-select " id="select-color">
@@ -48,49 +40,60 @@
                     {% endfor %}
                 </select>
               </div>
+            {%  endif %}
         
-        <!--
-            <div class="mb-3 me-3 fit-content">
-                <label for="select-size" class="form-label">Available sizes: </label>
-                <select class="form-select " id="select-size">
-                  
-
-                </select>
-              </div>
-              
-              -->
-        <input type="hidden" value="{% url 'store:update-product' %}" id="update-product-url">
-        <div class="mx-4 d-flex flex-column">
-            <span class="form-label">Select size:</span>
-            <div class="fit-content d-flex align-items-center btn-group  flex-wrap">
-
-                {% for size in sizes %}
-                    {% if size.id in blocked_sizes  %}
-                        <input type="radio" class="btn-check size-selector" name="size" id="size_{{ size.id }}" value="{{ size.id }}" autocomplete="off" disabled>
-                    {% else %}
-                        <input type="radio" class="btn-check size-selector" name="size" id="size_{{ size.id }}" value="{{ size.id }}" autocomplete="off">
-                    {% endif %}
-                        <label class="btn btn-secondary" for="size_{{ size.id }}">{{ size.size_name }}</label>
-                {% endfor %}
-                
-              </div>
+        
+            <input type="hidden" value="{% url 'store:update-product' %}" id="update-product-url">
+            
+            {% if sizes %}
+            <div class="d-flex flex-column">
+                <span class="form-label">Select size:</span>
+                <div class="fit-content d-flex align-items-center btn-group  flex-wrap">
+    
+                    {% for size in sizes %}
+                        {% if size.id in blocked_sizes  %}
+                            <input type="radio" class="btn-check size-selector" name="size" id="size_{{ size.id }}" value="{{ size.id }}" autocomplete="off" disabled>
+                        {% else %}
+                            <input type="radio" class="btn-check size-selector" name="size" id="size_{{ size.id }}" value="{{ size.id }}" autocomplete="off">
+                        {% endif %}
+                            <label class="btn btn-secondary" for="size_{{ size.id }}">{{ size.size_name }}</label>
+                    {% endfor %}
+                    
+                  </div>
             </div>
+            {% endif %}
+        
         </div>
 
 
-      <!-- TODO add Ajax for remaining items-->
-        <div class="align-content-center  mb-3">
+
+      
+        <div class="d-flex my-4 align-content-center align-items-center flex-wrap">
+            
+            <div class="align-content-center display-6 fw-bold lh-1 text-body-emphasis me-5">
+                 <span id="product-price">{{ product.price }}</span> <span> $</span>
+            </div>
+            <div class="me-5 fit-content d-flex align-items-center">
+                <label for="select-quantity" class="form-label mx-1">Quantity: </label>
+                <select class="form-select mx-1" id="select-quantity">
+                  <option selected="" value="1">1</option>
+                    {% for i in quantities %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                    <option value="20+">20+</option>
+                </select>
+                <input class="form-control d-none mx-1" type="number" id="select-quantity" min="20">
+              </div>
+              <!-- TODO add Ajax for remaining items-->
+            <div class="align-content-center align-items-center ">
             {% if product.quantity <= 0 %}
                 <span class="text-danger">Not available</span>
             {% elif product.quantity <= 10 %}
-                <span class="text-warning">Remaining items: </span> <span class="text-warning">{{ product.quantity }}</span>
+                <span class="text-warning">Remaining items: </span> <span class="text-warning" id="product-quantity">{{ product.quantity }}</span>
             {% else %}
                 <span class="text-success">In stock</span>
             {% endif %}
         </div>
-
-        <div class="align-content-center display-6 fw-bold lh-1 text-body-emphasis mb-4">
-             <span id="product-price">{{ product.price }}</span> <span> $</span>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-between mb-4 mb-lg-3">
@@ -101,7 +104,7 @@
 
         </div>
       </div>
-    
+        
       <div class="col-lg-5 p-0 overflow-hidden shadow-lg">
            <img class="rounded-lg-3 w-100 p-4" src="{{ product.image_id.image.url }}" alt="" id="product-image">
       </div> 
