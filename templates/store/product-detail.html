@@ -84,16 +84,7 @@
                 </select>
                 <input class="form-control d-none mx-1" type="number" id="select-quantity" min="20">
               </div>
-              <!-- TODO add Ajax for remaining items-->
-            <div class="align-content-center align-items-center ">
-            {% if product.quantity <= 0 %}
-                <span class="text-danger">Not available</span>
-            {% elif product.quantity <= 10 %}
-                <span class="text-warning">Remaining items: </span> <span class="text-warning" id="product-quantity">{{ product.quantity }}</span>
-            {% else %}
-                <span class="text-success">In stock</span>
-            {% endif %}
-        </div>
+
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-between mb-4 mb-lg-3">

@@ -125,12 +125,45 @@ def product_detail(request, gen, category, id):
 
     return render(request, 'store/product-detail.html', data | header_data(request))
 
+
+
+def filters(request,products):
+    applied_filters = {}
+    if request.method == 'GET':
+        applied_filters['min_price'] = request.GET.get('min_price')
+        applied_filters['max_price'] = request.GET.get('max_price')
+        applied_filters['colors'] = request.GET.getlist('color_filtered')
+
+        if applied_filters['min_price'] and int(applied_filters['min_price']) >= 0:
+            products = products.filter(price__gte=applied_filters['min_price'])
+
+        if applied_filters['max_price'] and int(applied_filters['max_price']) >= 0:
+            products = products.filter(price__lte=applied_filters['max_price'])
+
+        if applied_filters['colors']:
+            selected_colors = Color.objects.filter(id__in=applied_filters['colors'])
+            if selected_colors.exists():
+                applied_filters['colors'] = list(selected_colors.values_list('id', flat=True))
+                products = products.filter(color__in=applied_filters['colors']).distinct()
+
+        return products, applied_filters
+
+    return None, applied_filters
+
+
+
 def store_view(request, gen):
     products = ProductVariant.objects.select_related('product').filter(Q(quantity__gt=0) & (Q(product__gender=gen) | Q(product__gender='Unisex')))
+
+    colors = Color.objects.all().distinct()
+
+    products,applied_filters = filters(request, products)
 
     data = {
         'products': products,
         'gender': gen,
+        'applied_filters': applied_filters,
+        'colors': colors
     }
 
     return render(request, 'store/store.html', data | header_data(request))
@@ -140,12 +173,17 @@ def category_view(request, gen, category):
 
     products = ProductVariant.objects.select_related('product__category', 'product').filter(Q(quantity__gt=0) & Q(product__category__category_slug=category) & (Q(product__gender=gen) | Q(product__gender='Unisex')) )
 
+    colors = Color.objects.all().distinct()
+
+    products, applied_filters = filters(request, products)
+
     data = {
         'products': products,
         'gender': gen,
         'category_slug': category,
-        'category_name': category.capitalize()
-
+        'category_name': category.capitalize(),
+        'applied_filters': applied_filters,
+        'colors': colors
     }
 
     return render(request, 'store/store.html', data | header_data(request))
