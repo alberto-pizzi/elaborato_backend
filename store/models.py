@@ -53,6 +53,11 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(str(self.name))
+        super().save(*args, **kwargs)
+
 class Image(models.Model):
     name = models.CharField(max_length=50, blank=True)
     product=models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -90,7 +95,6 @@ class ProductVariant(models.Model):
                 self.title += " " + self.size.size_name
         if not self.price:
             self.price = self.product.base_price
-        print(self.title)
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -5,16 +5,18 @@ from django.utils.translation import gettext_lazy as _
 
 
 # Register your models here.
-admin.site.register(Category)
-admin.site.register(Color)
-admin.site.register(Size)
-admin.site.register(Image)
+
+class ProductAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'slug')
+
+    list_display = ('id','name','category','base_price','variant','gender')
+
 
 
 class ProductVariantAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'purchased')
 
-    list_display = ('id','prod_name','show_image','product','prod_variant','color','size','price','quantity','purchased')
+    list_display = ('id','show_image','product','prod_gender','prod_variant','color','size','price','quantity','purchased')
 
     fieldsets = (
         (_('Product Variant Info'), {'fields': ('image_id','product','color','size','price','quantity')}),
@@ -39,44 +41,19 @@ class ProductVariantAdmin(admin.ModelAdmin):
 
     prod_variant.short_description = 'Variant Type'
 
-    def prod_name(self,obj):
-        if obj.product.name:
-            return obj.product.name
+    def prod_gender(self, obj):
+        if obj.product.gender:
+            return obj.product.gender
         else:
-            return "No Name"
+            return "Gender not found"
 
 
-    '''
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        product = obj.product if obj else None
-        if product:
-            if product.variant == Product.SIZE:
-                self.exclude = ('color',)
-            elif product.variant == Product.COLOR:
-                self.exclude = ('size',)
-            elif product.variant == Product.NONE:
-                self.exclude = ('size','color')
-            else:
-                self.exclude = ()
-        else:
-            self.exclude = ()
-        return form
 
-    def get_fields(self, request, obj=None):
-        fields = super().get_fields(request, obj)
-        product = obj.product if obj else None
-        if product:
-            if product.variant == Product.SIZE:
-                return [field for field in fields if field != 'color']
-            elif product.variant == Product.COLOR:
-                return [field for field in fields if field != 'size']
-            elif product.variant == Product.NONE:
-                return [field for field in fields if field != 'none']
-        return fields
-    '''
-
-admin.site.register(Product)
+admin.site.register(Product,ProductAdmin)
 admin.site.register(ProductVariant, ProductVariantAdmin)
+admin.site.register(Category)
+admin.site.register(Color)
+admin.site.register(Size)
+admin.site.register(Image)
 
 
