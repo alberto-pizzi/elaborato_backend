@@ -117,7 +117,16 @@
           <div class="row g-3">
             {% include 'accounts/registration/name_fields.html' %}
 
-            {% include 'accounts/registration/email_field.html' %}
+            <input type="hidden" id="check-email" value="{% url 'accounts:check-email' %}">
+            <div class="col-12">
+              <label for="email" class="form-label">Email</label>
+                <!-- this field is not verified with the server -->
+              <input type="email" class="form-control" id="email-anonymous" name="email" placeholder="yourname@example.com" required="" value="{{ email }}" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$">
+              <div class="invalid-feedback" id="email-error-message">
+                Please enter a valid email address.
+              </div>
+            <div class="valid-feedback">Looks Good!</div>
+            </div>
 
             {% include 'accounts/registration/address_fields.html' %}
           </div>
