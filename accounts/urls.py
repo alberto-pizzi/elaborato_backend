@@ -12,6 +12,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/change-password', views.change_password, name='change-password'),
     path('profile/change-email', views.change_email, name='change-email'),
+    path('profile/change-username', views.change_username, name='change-username'),
     path('profile/manage-addresses', views.manage_addresses, name='manage-addresses'),
     path('profile/manage-addresses/add-address', views.add_address, name='add-address'),
     path('profile/manage-addresses/edit-address/<str:encoded_id>', views.edit_address, name='edit-address'),

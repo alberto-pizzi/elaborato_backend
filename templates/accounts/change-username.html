@@ -1,0 +1,42 @@
+{% extends 'accounts/profile.html' %}
+{% load static %}
+
+
+{% block section_title %}Change your username{% endblock section_title %}
+{% block section_par %}Here you can change username of your account{% endblock section_par %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+
+            <form method="POST" class="row g-3 container needs-validation">
+            {% csrf_token %}
+                
+            <input type="hidden" id="check-username" value="{% url 'accounts:check-username' %}">
+            <div class="col-12">
+              <label for="username" class="form-label">Username</label>
+              <div class="input-group has-validation">
+                <span class="input-group-text">@</span>
+                <input type="text" class="form-control required-field" id="username" name="username" placeholder="Username" required="" value="{{ username }}">
+              <div class="invalid-feedback" id="username-error-message">
+                  Your username is required.
+                </div>
+                  <div class="valid-feedback">Looks Good!</div>
+              </div>
+            </div>
+
+            <hr class="my-4">
+            <button class="btn btn-primary" type="submit">Save</button>
+
+            <a class="btn btn-outline-secondary btn-sm mt-3" href="{% url 'accounts:profile' %}" role="button">< Go back</a>
+
+            </form>
+
+    {% else %}
+        You are not logged in.
+    {% endif %}
+
+{% endblock content %}
+
+{% block scripts %}
+	<script src="{% static  'assets/dist/js/form-validation.js' %}"></script>
+{% endblock scripts%}

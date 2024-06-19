@@ -365,3 +365,34 @@ def change_email(request):
 
 
     return render(request, 'accounts/change-email.html',data_response)
+
+
+def change_username(request):
+    data_response= {
+        'username': ''
+    }
+
+    if request.user.is_authenticated:
+        user = CustomUser.objects.get(id=request.user.id)
+        old_username = user.username
+        if old_username:
+            data_response['username'] = old_username
+        else:
+            messages.error(request, 'Username not found.')
+            redirect('accounts:profile')
+        if request.method == 'POST':
+            new_username = request.POST['username']
+
+            if old_username == new_username:
+                messages.error(request, 'The new username is equal to old one.')
+            elif username_is_valid(new_username):
+                user.username = new_username
+                user.save()
+                messages.success(request, 'Your username was successfully updated!')
+                return redirect('accounts:profile')
+            else:
+                messages.error(request, 'Username is incorrect.')
+            return redirect('accounts:change-username')
+
+
+    return render(request, 'accounts/change-username.html',data_response)
