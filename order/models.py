@@ -63,7 +63,7 @@ class Order(models.Model):
     total_products = models.PositiveIntegerField(null=False,blank=False,editable=False)
     total_price = models.DecimalField(max_digits=10, decimal_places=2,null=False,blank=False,default=0,editable=False)
     payment_method = models.CharField(max_length=20,choices=PAYMENT_METHODS,null=False,blank=False,editable=False)
-
+    shipping_email = models.EmailField(max_length=254,null=True,blank=True)
     shipping_nickname = models.CharField(max_length=255, blank=True, null=True)
     shipping_first_name_recipient = models.CharField(max_length=255, blank=True, null=True)
     shipping_last_name_recipient = models.CharField(max_length=255, blank=True, null=True)

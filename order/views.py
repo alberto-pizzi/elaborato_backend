@@ -128,6 +128,21 @@ def cart_info(request):
     return data_response
 
 
+def check_guest_checkout_required_fields(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        address1 = request.POST.get('address1')
+        address2 = request.POST.get('address2')
+        country = request.POST.get('country')
+        state = request.POST.get('state')
+        zip = request.POST.get('zip')
+
+        if email and first_name and last_name and address1 and country and state and zip:
+            return True
+    return False
+
 def checkout(request):
     # TODO add items into order
     cart = get_or_create_cart(request)
@@ -145,51 +160,13 @@ def checkout(request):
         if request.method == 'POST':
             chosen_address = request.POST.get('address')
             user_address = Address.objects.filter(id=chosen_address).all().first()
-    else:
-        if request.method == 'POST':
-            email = request.POST.get('email')
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            address1 = request.POST.get('address1')
-            address2 = request.POST.get('address2')
-            country = request.POST.get('country')
-            state = request.POST.get('state')
-            zip = request.POST.get('zip')
-            save_user = request.POST.get('save_user')
 
-            if save_user:
-                print('Save user: yes')
-                username = request.POST.get('username')
-                password = request.POST.get('password')
 
-                user_profile = CustomUser.objects.create_user(
-                    username=username,
-                    email=email,
-                    password=password,
-                    first_name=first_name,
-                    last_name=last_name
-                )
-
-                user_profile.save()
-
-            user_address = Address(
-                user=user_profile,
-                nickname=first_name + ' ' + last_name + ' ' + address1,
-                first_name_recipient=first_name,
-                last_name_recipient=last_name,
-                address1=address1,
-                address2=address2,
-                country=country,
-                state=state,
-                zip=zip
-            )
-
-            user_address.save()
 
     if request.method == 'POST':
         payment_method = request.POST.get('payment-method')
 
-        if user_address and payment_method:
+        if (user_address or check_guest_checkout_required_fields(request)) and payment_method:
             # check if all product in the cart are available
             for item in cart.cartitem_set.all():
                 product = item.product
@@ -199,20 +176,47 @@ def checkout(request):
 
             # create an order
 
-            order = Order(
-                user=user_profile,
-                total_products=cart.total_items(),
-                total_price=cart.total_price(),
-                shipping_nickname=user_address.nickname,
-                shipping_first_name_recipient=user_address.first_name_recipient,
-                shipping_last_name_recipient=user_address.last_name_recipient,
-                shipping_address1=user_address.address1,
-                shipping_address2=user_address.address2,
-                shipping_country=user_address.country,
-                shipping_state=user_address.state,
-                shipping_zip=user_address.zip,
-                payment_method=payment_method
-            )
+            if request.user.is_authenticated:
+                order = Order(
+                    user=user_profile,
+                    total_products=cart.total_items(),
+                    total_price=cart.total_price(),
+                    shipping_nickname=user_address.nickname,
+                    shipping_first_name_recipient=user_address.first_name_recipient,
+                    shipping_email=user_profile.email,
+                    shipping_last_name_recipient=user_address.last_name_recipient,
+                    shipping_address1=user_address.address1,
+                    shipping_address2=user_address.address2,
+                    shipping_country=user_address.country,
+                    shipping_state=user_address.state,
+                    shipping_zip=user_address.zip,
+                    payment_method=payment_method
+                )
+            else:
+                email = request.POST.get('email')
+                first_name = request.POST.get('first_name')
+                last_name = request.POST.get('last_name')
+                address1 = request.POST.get('address1')
+                address2 = request.POST.get('address2')
+                country = request.POST.get('country')
+                state = request.POST.get('state')
+                zip = request.POST.get('zip')
+
+                order = Order(
+                    user=None,
+                    total_products=cart.total_items(),
+                    total_price=cart.total_price(),
+                    shipping_nickname=first_name + ' ' + last_name + ' ' + address1,
+                    shipping_first_name_recipient=first_name,
+                    shipping_last_name_recipient=last_name,
+                    shipping_email=email,
+                    shipping_address1=address1,
+                    shipping_address2=address2,
+                    shipping_country=country,
+                    shipping_state=state,
+                    shipping_zip=zip,
+                    payment_method=payment_method
+                )
             order.save()
 
             for item in cart.cartitem_set.all():
