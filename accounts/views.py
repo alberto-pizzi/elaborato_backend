@@ -9,6 +9,7 @@ import re
 from django.conf import settings
 
 from .templatetags.hashid_filters import encode_id, decode_id
+from order.views import get_or_create_cart
 
 
 def login_view(request):
@@ -103,6 +104,16 @@ def signup_view(request):
 
             user_profile.save()
             user_address.save()
+
+
+            # transfer session cart to user cart
+            anonymous_cart = get_or_create_cart(request)
+
+            if anonymous_cart:
+                anonymous_cart.user = user_profile
+                anonymous_cart.save()
+                del request.session['cart_id']
+
 
             messages.success(request, "Registered successfully! Now please log in.")
             return redirect('accounts:login')
