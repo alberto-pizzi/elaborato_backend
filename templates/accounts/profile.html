@@ -10,7 +10,7 @@
 {% block main_space %}
     {% if user.is_authenticated %}
 <div class="list-group mx-auto">
-<!-- TODO finish to implement -->
+
   <a href="{% url 'accounts:profile' %}" class="list-group-item list-group-item-action {% if request.path ==  '/accounts/profile/' %}active{% endif %}" aria-current="true">
     Your profile
   </a>
@@ -26,7 +26,7 @@
     {% if user.is_authenticated %}
             <div class="list-group">
         
-        <!-- TODO finish to implement -->
+
         <a href="{% url 'accounts:change-username' %}" class="list-group-item list-group-item-action">Change your username</a>
         <a href="{% url 'accounts:change-email' %}" class="list-group-item list-group-item-action">Change your email</a>
         <a href="{% url 'accounts:change-password' %}" class="list-group-item list-group-item-action">Change your password</a>

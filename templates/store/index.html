@@ -162,7 +162,7 @@
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-between">
 
-        <!-- TODO review this menu -->
+
         <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
             <li><a href="{% url 'store:home' %}" class="nav-link px-2 text-white">Home</a></li>
             <li><a href="{% url 'store:gender-store' 'Male' %}" class="nav-link px-2 text-white">Man</a></li>
@@ -253,14 +253,13 @@
             
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     
-          <!-- TODO connect buttons with database-->
+
               {% if products %}
                   
                   {% for article in products %}
                     <div class="col">
                   <div class="card shadow-sm">
                       <a href="{% url 'store:product-detail' gen=article.product.gender category=article.product.category.category_slug  id=article.id %}">
-                          <!-- TODO change with img -->
                           <div class="image-container">
                               {% if article.image_id %}
                                 <img class="product-image" src="{{ article.image_id.image.url }}" alt="{{ article.image_id.name }}" >
@@ -280,11 +279,7 @@
         
                         <span>Color shown: {{ article.color.color_name }}</span>
                             <div class="btn-group">
-                            <!-- TODO remove
-                            <button type="button" class="btn btn-sm btn-outline-primary add-to-cart-button">Add to cart</button>
-                            -->
-        
-                            
+                                
                           <button type="button" class="btn btn-sm btn-outline-secondary add-to-favourites">
         
                             <svg class="favourite-icon" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -297,15 +292,7 @@
         
                           </button>
                         </div>
-                        <!-- TODO add button -->
-                        <!--
-                            <div class="cart-options">
                             
-                                <div class="article-quantity">0</div>
-                                <button type="button" class="btn btn-sm btn-outline-primary remove-from-cart">Remove</button>
-                            </div>
-                        -->
-                        
                       </div>
                     </div>
                   </div>

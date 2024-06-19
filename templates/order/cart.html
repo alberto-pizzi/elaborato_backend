@@ -182,13 +182,13 @@
                 {% csrf_token %}
 
                 <input type="hidden" class="prod_id" value="{{ cart_product.product_id }}">
-                <!-- FIXME margin div button-->
+
                 <div class="align-content-center d-block">
                     <button type="button" class="btn btn-sm btn-outline-primary remove-from-cart">Del</button>
                 </div>
                 <div class="mx-3">
                   <h6 class="my-0">{{ cart_product.name }}</h6>
-                    <!-- TODO add product format (size..) -->
+
                   <small class="text-body-secondary">Size: {{ cart_product.size }} Color: {{ cart_product.color }}</small>
                 </div>
             </div>

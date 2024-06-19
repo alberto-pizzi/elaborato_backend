@@ -14,16 +14,14 @@
   <section class="pt-3 pb-5 text-center container">
         <div class="row pb-lg-5">
       <div class="mx-auto">
-          <!-- FIXME
-        <h1 class="fw-light mb-1">gender</h1>
-        -->
+
 
         <nav aria-label="breadcrumb">
     <ol class="breadcrumb breadcrumb-chevron p-1 bg-body-tertiary rounded-3 justify-content-center ">
       <li class="breadcrumb-item">
         <a class="link-body-emphasis fw-semibold text-decoration-none" href="{% url 'store:home' %}">Home</a>
       </li>
-        <!-- TODO optimize breadcrumb-->
+
 
      <li class="breadcrumb-item">
         <a class="link-body-emphasis fw-semibold text-decoration-none" href="{% url 'store:gender-store' gen=gender %}">{{ gender }}</a>
@@ -55,7 +53,7 @@
 
             {% for category in categories %}
                 <li class="nav-item">
-                    <!-- FIXME connect with url-->
+
                     <a class="nav-link" href="{% url 'store:category' gen=gender category=category.category_slug %}">{{ category.name }}</a>
                 </li>
             {% endfor %}

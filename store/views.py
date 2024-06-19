@@ -111,7 +111,6 @@ def product_detail(request, gen, category, id):
 
 
 
-    #FIXME optimize redondancy
     data = {
         'product': product,
         'gender': gen,

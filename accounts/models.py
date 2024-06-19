@@ -12,18 +12,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-    # FIXME fix this method
-    def create_custom_user(self, username, email, password, first_name, last_name):
-        instance = CustomUser.objects.create_user(
-            username=username,
-            email=email,
-            password=password,
-            first_name=first_name,
-            last_name=last_name
-        )
-        instance.save()
-        return instance
-
 
 class Address(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
@@ -39,23 +27,3 @@ class Address(models.Model):
     def __str__(self):
         return self.nickname
 
-    # FIXME fix this method
-    def create_address(self,first_name,last_name,address1,address2,country,state,zip,user=None,nickname=None):
-        if nickname:
-            nick = nickname
-        else:
-            nick = first_name + ' ' + last_name + ' ' + address1
-
-        instance = Address(
-            user=user,
-            nickname=nick,
-            first_name_recipient=first_name,
-            last_name_recipient=last_name,
-            address1=address1,
-            address2=address2,
-            country=country,
-            state=state,
-            zip=zip
-        )
-        instance.save()
-        return instance

@@ -26,7 +26,6 @@ def get_or_create_cart(request):
 
 
 def add_to_cart(request):
-    # TODO add "one size" feature
     if request.method == 'POST':
 
         prod_id = int(request.POST.get('product_id'))
@@ -49,7 +48,6 @@ def add_to_cart(request):
         if ProductVariant.objects.filter(product=prod_id, size=size, color=color).exists():
             product = ProductVariant.objects.get(product=prod_id, size=size, color=color)
 
-            # TODO consider anonymous user's cart
             cart_item = CartItem.objects.filter(cart=cart, product=product).first()
 
             # alert_class is a Bootstrap class for banner color
@@ -151,7 +149,6 @@ def check_guest_checkout_required_fields(request):
     return False
 
 def checkout(request):
-    # TODO add items into order
     cart = get_or_create_cart(request)
     data_response = {
         'user_addresses': None
