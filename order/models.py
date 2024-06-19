@@ -81,10 +81,13 @@ class Order(models.Model):
         else:
             return 'Order n.: ' + f'{self.id} x {self.shipping_first_name_recipient + self.shipping_last_name_recipient}'
 
+    def get_order_items(self):
+        return ', '.join([f'{item.quantity} x {item.product.__str__()}' for item in self.order_items.all()])
+
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,related_name='order_items')
     product = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 

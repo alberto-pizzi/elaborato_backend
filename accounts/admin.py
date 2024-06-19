@@ -7,6 +7,7 @@ from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import Group
+from django.contrib.auth.forms import UserCreationForm
 
 
 class CustomUserAdmin(DefaultUserAdmin):
