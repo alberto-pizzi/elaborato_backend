@@ -11,6 +11,15 @@
 {% block content %}
     <!-- FIXME improve redundancy -->
       <div class="col-md-5 col-lg-4 order-md-last">
+      {% if not user.is_authenticated %}
+          <hr class="my-4">
+          <div class="d-flex flex-column w-100">
+              <p class="text-center fw-bold">You are not logged in:</p>
+              <a class="btn btn-outline-secondary mb-2" href="{% url 'accounts:login' %}" role="button">Log in</a>
+              <a class="btn btn-warning" href="{% url 'accounts:sign-up' %}" role="button">Sign up</a>
+          </div>
+          <hr class="my-4">
+      {% endif %}
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-primary">Your cart</span>
           <span class="badge bg-primary rounded-pill" id="total-items">{{ total_items }}</span>
@@ -25,12 +34,11 @@
 
 
                 <input type="hidden" class="prod_id" value="{{ cart_product.product_id }}">
-                <!-- FIXME margin div button-->
+
                 
                 <div class="me-3">
                   <h6 class="my-0">{{ cart_product.name }}</h6>
-                    <!-- TODO add product format (size..) -->
-                  <small class="text-body-secondary">Size: {{ cart_product.size }} Color: {{ cart_product.color }}</small>
+                  <small class="text-body-secondary">Size: {{ cart_product.size }} | Color: {{ cart_product.color }}</small>
                 </div>
             </div>
             <span class="text-body-secondary">
@@ -108,23 +116,15 @@
               <form class="needs-validation" method="POST" action="" novalidate="">
           <div class="row g-3">
             {% include 'accounts/registration/name_fields.html' %}
-              
+
             {% include 'accounts/registration/email_field.html' %}
-              
+
             {% include 'accounts/registration/address_fields.html' %}
           </div>
                   
-          <hr class="my-4">
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="save-user" name="save_user">
-            <label class="form-check-label" for="save-user">Sign up with this address.</label>
-              
-              
-              <div class="row g-3 mt-3 d-none" id="sign-up-hidden-form">
-                {% include 'accounts/registration/user_pass_fields.html' %}
-              </div> 
-          </div>
                   
+                  
+
           {% include 'order/payment.html' %}
         </form>
         {% endif %}
