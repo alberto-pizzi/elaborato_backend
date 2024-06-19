@@ -261,35 +261,3 @@ $('#email').on('blur', function () {
     checkEmailWithServer(this)
 });
 
-
-// TODO implement form validation
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById("signup-form");
-
-    form.addEventListener(
-        "submit",
-        (e) => {
-
-
-            let email = $('#email');
-            let username = $('#username');
-            checkUsernameWithServer(username);
-            checkEmailWithServer(email);
-
-            if (!form.checkValidity() ||
-          !validateEmail() ) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            else{
-                form.classList.add("was-validated");
-            }
-
-
-
-
-            console.log("submit");
-        },
-        false
-    );
-});

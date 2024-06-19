@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 admin.site.register(Cart)
-admin.site.register(CartItem)
 
 
 

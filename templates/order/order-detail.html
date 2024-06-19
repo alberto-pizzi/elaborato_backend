@@ -52,13 +52,11 @@
           <div class="align-content-center d-flex justify-content-around flex-column text-center">
               <span>{{ item.product.title }}</span>
               <div>
-                  {% if item.product.color %}
-                    <span>Color: {{ item.product.color }}</span>
-                  {% endif %}
-                  {% if item.product.size %}
+                  
+                    <span>Color: {% if item.product.color %}{{ item.product.color }}{% else %}One color{% endif %}</span>
                     <span>  |  </span>
-                    <span>Size: {{ item.product.size }}</span>
-                  {% endif %}
+                    <span>Size: {% if item.product.size %}{{ item.product.size }}{% else %}One size{% endif %}</span>
+                  
 
               </div>
           </div>

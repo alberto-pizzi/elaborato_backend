@@ -150,16 +150,17 @@ function checkFilledFields(size,color){
 
 
     let select = document.getElementById('select-color');
+    let selectSelected;
     if (select) {
         let selectValue = select.value;
-        let selectSelected;
+
         if (selectValue) {
             selectSelected = selectValue !== '';
         }
     }
 
     console.log('size: ',radioOptions);
-    if (radioOptions && !radioSelected){
+    if ((radioOptions.length > 0) && !radioSelected){
         isOk = false;
     }
 
