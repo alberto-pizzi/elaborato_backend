@@ -1,0 +1,74 @@
+{% extends 'accounts/profile.html' %}
+{% load static %}
+
+{% block section_title %}Your addresses{% endblock section_title %}
+{% block section_par %}Here you can see your addresses saved{% endblock section_par %}
+
+
+{% block content %}
+{% if user.is_authenticated %}
+
+    {% if addresses %}
+
+        <ul class="list-group">
+        {% for address in addresses %}
+            <li class="list-group-item">
+            
+                <div class="d-flex justify-content-between px-2 align-content-center align-items-center flex-wrap overflow-hidden">
+                    
+                    <div class="d-flex text-primary">
+                        {{ address.address.nickname }}
+                    </div>
+                    
+                    <div class="d-flex flex-column">
+                    <span class="fw-bold text-center">{{ address.address.first_name_recipient }} {{ address.address.last_name_recipient }}</span>
+                      <span class="">
+                      {{ address.address.address1 }}, {% if address.address.address2 %}{{ address.address.address2 }},{% endif %}
+                      {{ address.address.state }}, {{ address.address.zip }}, {{ address.address.country }}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a class="btn btn-outline-secondary mx-1" href="{% url 'accounts:edit-address' address.encrypted_id %}" role="button">Edit</a>
+                            <button type="button" class="btn btn-outline-danger mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
+                    </div>
+                </div>
+            
+            </li>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Are you sure ?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    By clicking the "Delete" button you will permanently delete the address "{{ address.address.nickname }}" from your account.
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{% url 'accounts:delete-address' address.encrypted_id %}" method="POST">
+                      {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Confirm delete</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+        </ul>
+
+        
+    {% else %}
+        <div class="text-center text-warning">
+        There are no addresses saved
+        </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-center mt-3">
+        <a class="btn btn-success mx-1" href="{% url 'accounts:add-address' %}" role="button">Add address</a>
+    </div>
+    
+{% else %}
+    You are not logged in.
+{% endif %}
+{% endblock content %}

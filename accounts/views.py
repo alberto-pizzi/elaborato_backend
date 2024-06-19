@@ -10,6 +10,7 @@ from django.conf import settings
 
 from .templatetags.hashid_filters import encode_id, decode_id
 from order.views import get_or_create_cart
+from django.contrib.auth import update_session_auth_hash
 
 
 def login_view(request):
@@ -180,7 +181,28 @@ def profile(request):
 
     return render(request, 'accounts/profile.html',  data_response)
 
+def manage_addresses(request):
 
+    data_response = {
+        'addresses': None
+
+    }
+
+    if request.user.is_authenticated:
+        user_id = request.user.id
+        addresses = Address.objects.filter(user=user_id).all()
+        data_response['addresses'] = addresses
+        encrypted_addresses = []
+        for address in addresses:
+            encrypted_id = encode_id(address.id)
+            encrypted_addresses.append({
+                'address': address,
+                'encrypted_id': encrypted_id
+            })
+
+        data_response['addresses'] = encrypted_addresses
+
+    return render(request, 'accounts/manage-addresses.html',  data_response)
 
 def add_address(request):
 
@@ -288,3 +310,28 @@ def delete_address(request,encoded_id):
 
     messages.error(request, 'Deletion failed ')
     return redirect('accounts:profile')
+
+def change_password(request):
+
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+
+            old_password = request.POST['old_password']
+            new_password = request.POST['password']
+
+            if not request.user.check_password(old_password):
+                messages.error(request, 'Current password is invalid.')
+            elif old_password == new_password:
+                messages.error(request, 'The new password is equal to old one.')
+            elif password_is_valid(new_password):
+                request.user.set_password(new_password)
+                request.user.save()
+                update_session_auth_hash(request, request.user)  # keep user authenticated
+                messages.success(request, 'Your password was successfully updated!')
+                return redirect('accounts:profile')
+            else:
+                messages.error(request, 'Passowrd is incorrect.')
+            return redirect('accounts:change-password')
+
+
+    return render(request, 'accounts/change-password.html')

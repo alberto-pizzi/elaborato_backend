@@ -7,71 +7,37 @@
 {% block section_par %}Here you can edit your profile{% endblock section_par %}
 
 
+{% block main_space %}
+    {% if user.is_authenticated %}
+<div class="list-group mx-auto">
+<!-- TODO finish to implement -->
+  <a href="{% url 'accounts:profile' %}" class="list-group-item list-group-item-action {% if request.path ==  '/accounts/profile/' %}active{% endif %}" aria-current="true">
+    Your profile
+  </a>
+  <a href="{% url 'accounts:manage-addresses' %}" class="list-group-item list-group-item-action {% if request.path ==  '/accounts/profile/manage-addresses' %}active{% endif %}">Manage your addresses</a>
+    
+
+    </div>
+    {% endif %}
+{% endblock main_space %}
+
+
 {% block content %}
+    {% if user.is_authenticated %}
+            <div class="list-group">
+        
+        <!-- TODO finish to implement -->
+        <a href="#" class="list-group-item list-group-item-action">Change your name</a>
+        <a href="#" class="list-group-item list-group-item-action">Change your username</a>
+        <a href="#" class="list-group-item list-group-item-action">Change your email</a>
+        <a href="{% url 'accounts:change-password' %}" class="list-group-item list-group-item-action">Change your password</a>
+      
 
-    {% if addresses %}
-
-        <div class="list-group">
-        {% for address in addresses %}
-            <li class="list-group-item">
-            
-                <div class="d-flex justify-content-between px-2 align-content-center align-items-center flex-wrap overflow-hidden">
-                    
-                    <div class="d-flex text-primary">
-                        {{ address.address.nickname }}
-                    </div>
-                    
-                    <div class="d-flex flex-column">
-                    <span class="fw-bold text-center">{{ address.address.first_name_recipient }} {{ address.address.last_name_recipient }}</span>
-                      <span class="">
-                      {{ address.address.address1 }}, {% if address.address.address2 %}{{ address.address.address2 }},{% endif %}
-                      {{ address.address.state }}, {{ address.address.zip }}, {{ address.address.country }}</span>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between">
-                        <a class="btn btn-outline-secondary mx-1" href="{% url 'accounts:edit-address' address.encrypted_id %}" role="button">Edit</a>
-                            <button type="button" class="btn btn-outline-danger mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
-                    </div>
-                </div>
-            
-            </li>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Are you sure ?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    By clicking the "Delete" button you will permanently delete the address "{{ address.address.nickname }}" from your account.
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <form action="{% url 'accounts:delete-address' address.encrypted_id %}" method="POST">
-                      {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Confirm delete</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-        {% endfor %}
-        </div>
-
+    </div>
         
     {% else %}
-        <div class="text-center text-warning">
-        There are no addresses saved
-        </div>
+        You are not logged in.
     {% endif %}
-
-    <div class="d-flex justify-content-center mt-3">
-        <a class="btn btn-success mx-1" href="{% url 'accounts:add-address' %}" role="button">Add address</a>
-    </div>
-    
-
-    
-    
-    
-
 {% endblock content %}
+
+

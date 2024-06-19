@@ -1,5 +1,8 @@
-{% extends 'accounts/profile.html' %}
+{% extends 'accounts/manage-addresses.html' %}
 {% load static %}
+
+{% block section_title %}Add address{% endblock section_title %}
+{% block section_par %}Here you can add and save an address{% endblock section_par %}
 
 
 {% block content %}
@@ -20,9 +23,11 @@
         <hr class="my-4">
         <button class="btn btn-primary" type="submit">Save</button>
     
-        <a class="btn btn-outline-secondary btn-sm mt-3" href="{% url 'accounts:profile' %}" role="button">< Go back</a>
+        <a class="btn btn-outline-secondary btn-sm mt-3" href="{% url 'accounts:manage-addresses' %}" role="button">< Go back</a>
     
         </form>
+    {% else %}
+        You are not logged in.
     {% endif %}
 
 {% endblock content %}

@@ -2,6 +2,9 @@
 {% load static %}
 
 
+{% block section_title %}Edit your address{% endblock section_title %}
+{% block section_par %}Here you can edit this address saved{% endblock section_par %}
+
 {% block content %}
     {% if user.is_authenticated %}
         {% if can_edit %}
@@ -21,7 +24,7 @@
             <hr class="my-4">
             <button class="btn btn-primary" type="submit">Save</button>
 
-            <a class="btn btn-outline-secondary btn-sm mt-3" href="{% url 'accounts:profile' %}" role="button">< Go back</a>
+            <a class="btn btn-outline-secondary btn-sm mt-3" href="{% url 'accounts:manage-addresses' %}" role="button">< Go back</a>
 
             </form>
         {% else %}
@@ -30,6 +33,8 @@
             </div>
 
         {% endif %}
+    {% else %}
+        You are not logged in.
     {% endif %}
 
 {% endblock content %}
