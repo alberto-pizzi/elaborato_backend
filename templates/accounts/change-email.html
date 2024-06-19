@@ -1,0 +1,31 @@
+{% extends 'accounts/profile.html' %}
+{% load static %}
+
+
+{% block section_title %}Change your email{% endblock section_title %}
+{% block section_par %}Here you can change email associated to your account{% endblock section_par %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+
+            <form method="POST" class="row g-3 container needs-validation">
+            {% csrf_token %}
+                
+            {% include 'accounts/registration/email_field.html' %}
+                                
+            <hr class="my-4">
+            <button class="btn btn-primary" type="submit">Save</button>
+
+            <a class="btn btn-outline-secondary btn-sm mt-3" href="{% url 'accounts:profile' %}" role="button">< Go back</a>
+
+            </form>
+
+    {% else %}
+        You are not logged in.
+    {% endif %}
+
+{% endblock content %}
+
+{% block scripts %}
+	<script src="{% static  'assets/dist/js/form-validation.js' %}"></script>
+{% endblock scripts%}

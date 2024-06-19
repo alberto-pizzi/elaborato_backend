@@ -335,3 +335,33 @@ def change_password(request):
 
 
     return render(request, 'accounts/change-password.html')
+
+def change_email(request):
+    data_response= {
+        'email': ''
+    }
+
+    if request.user.is_authenticated:
+        user = CustomUser.objects.get(id=request.user.id)
+        old_email = user.email
+        if old_email:
+            data_response['email'] = old_email
+        else:
+            messages.error(request, 'Email not found.')
+            redirect('accounts:profile')
+        if request.method == 'POST':
+            new_email = request.POST['email']
+
+            if old_email == new_email:
+                messages.error(request, 'The new email is equal to old one.')
+            elif email_is_valid(new_email):
+                user.email = new_email
+                user.save()
+                messages.success(request, 'Your email was successfully updated!')
+                return redirect('accounts:profile')
+            else:
+                messages.error(request, 'Email is incorrect.')
+            return redirect('accounts:change-email')
+
+
+    return render(request, 'accounts/change-email.html',data_response)
