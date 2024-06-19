@@ -258,7 +258,7 @@
               {% for article in products %}
                 <div class="col">
               <div class="card shadow-sm">
-                  <a href="{% url 'store:product-detail' gen=article.product.gender category=article.product.category  id=article.id %}">
+                  <a href="{% url 'store:product-detail' gen=article.product.gender category=article.product.category.category_slug  id=article.id %}">
                       <!-- TODO change with img -->
                       <div class="image-container">
                           {% if article.image_id %}
@@ -271,7 +271,7 @@
                   
                   </a>
                       <div class="card-body">
-                    <a href="{% url 'store:product-detail' gen=article.product.gender category=article.product.category id=article.id %}">
+                    <a href="{% url 'store:product-detail' gen=article.product.gender category=article.product.category.category_slug id=article.id %}">
                   <h2 class="name-article">{{ article.product.name }} </h2>
                         </a>
                   <span class="price">{{ article.price }} $</span>
