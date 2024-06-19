@@ -68,6 +68,23 @@ function showNotification(response) {
     }
 }
 
+function showMessage(message,alertClass) {
+    if (message !== undefined) {
+        let banner = $('#notification-banner');
+        $('#notification-text').text(message);
+        banner.removeClass('d-none');
+        banner.addClass(alertClass);
+
+        setTimeout(() => {
+            banner.removeClass(alertClass);
+            banner.addClass('d-none');
+        }, 3000);
+    }
+    else{
+        console.error('Error showing message');
+    }
+}
+
 
 document.getElementById('select-quantity').addEventListener('change', function() {
     let moreQuantityInput = document.querySelector('input#select-quantity')
@@ -112,6 +129,45 @@ document.getElementById('select-color').addEventListener('change', function() {
 });
 
 
+function checkFilledFields(){
+    let radioOptions = document.getElementsByName('size');
+    let radioSelected = false;
+
+    let isOk = true;
+
+    if (radioOptions) {
+        for (let i = 0; i < radioOptions.length; i++) {
+            if (radioOptions[i].checked) {
+                radioSelected = true;
+                break;
+            }
+        }
+    }
+
+
+    let selectValue = document.getElementById('select-color').value;
+    let selectSelected;
+    if (selectValue) {
+        selectSelected = selectValue !== '';
+    }
+
+    if (radioOptions && !radioSelected){
+        isOk = false;
+    }
+
+    if (selectValue && !selectSelected){
+        isOk = false;
+    }
+
+    if (!isOk){
+        showMessage("Select all fields required, please","alert-warning");
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+
 $('.add-to-cart').click(function (e){
    e.preventDefault();
    let product_id = $(this).closest('.product_data').find('.prod_id').val();
@@ -122,22 +178,24 @@ $('.add-to-cart').click(function (e){
 
    let ajax_url = $('#ajax_url').val();
 
-   $.ajax({
-       method: "POST",
-       url: ajax_url,
-       data: {
-           'product_id': product_id,
-           'product_qty': getProductQuantity(),
-           'product_size': product_size,
-           'product_color': product_color,
-           csrfmiddlewaretoken: token
-       },
-       dataType: "json",
-       success: function (response){
-           getTotalItems(response);
-           showNotification(response);
-       },
-       error: getAjaxErrorMessage
-   });
+   if (checkFilledFields()) {
+       $.ajax({
+           method: "POST",
+           url: ajax_url,
+           data: {
+               'product_id': product_id,
+               'product_qty': getProductQuantity(),
+               'product_size': product_size,
+               'product_color': product_color,
+               csrfmiddlewaretoken: token
+           },
+           dataType: "json",
+           success: function (response) {
+               getTotalItems(response);
+               showNotification(response);
+           },
+           error: getAjaxErrorMessage
+       });
+   }
 
 });

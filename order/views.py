@@ -77,7 +77,8 @@ def add_to_cart(request):
                                  'result_message': result_message,
                                  'alert_class': alert_class})
 
-
+    alert_class = "alert-warning"
+    result_message = "Select all fields, please."
     return JsonResponse({'status': 'fail', 'message': 'Invalid request method.','result_message': result_message,
                                  'alert_class': alert_class}, status=400)
 
