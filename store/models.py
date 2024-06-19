@@ -43,17 +43,22 @@ class Product(models.Model):
 
     name = models.CharField(max_length=255, null=False, blank=False)
     slug = models.SlugField(null=False, unique=True)
-    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, null=False, blank=False, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
     base_price = models.DecimalField(max_digits=10, decimal_places=2, null=False,blank=False)
     variant = models.CharField(max_length=10, choices=VARIANTS, default=SIZE_COLOR)
     date_added = models.DateTimeField(auto_now_add=True, null=True)
     gender = models.CharField(max_length=10, choices=GENDERS, default='Unisex')
 
+    def clean(self):
+        if not self.category:
+            raise ValidationError('Every product must have a category.')
+
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
+        self.clean()
         if not self.slug:
             self.slug = slugify(str(self.name))
         super().save(*args, **kwargs)

@@ -40,7 +40,9 @@
                     {% endfor %}
                 </select>
               </div>
-            {%  endif %}
+            {% else %}
+                Color: One color
+            {% endif %}
         
         
             <input type="hidden" value="{% url 'store:update-product' %}" id="update-product-url">
@@ -61,7 +63,10 @@
                     
                   </div>
             </div>
+            {% else %}
+                Size: One size
             {% endif %}
+        
         
         </div>
 
