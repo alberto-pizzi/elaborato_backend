@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 # Create your models here.
 class Category(models.Model):
@@ -23,11 +25,15 @@ class Size(models.Model):
 
 
 class Product(models.Model):
+    NONE = 'None'
+    SIZE = 'Size'
+    COLOR = 'Color'
+    SIZE_COLOR = 'Size-Color'
     VARIANTS = (
-        ('None', 'None'),
-        ('Size', 'Size'),
-        ('Color', 'Color'),
-        ('Size-Color', 'Size-Color'),
+        (NONE, 'None'),
+        (SIZE, 'Size'),
+        (COLOR, 'Color'),
+        (SIZE_COLOR, 'Size-Color'),
     )
     GENDERS = (
         ('Male', 'Male'),
@@ -40,7 +46,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
     base_price = models.DecimalField(max_digits=10, decimal_places=2, null=False,blank=False)
-    variant = models.CharField(max_length=10, choices=VARIANTS, default='None')
+    variant = models.CharField(max_length=10, choices=VARIANTS, default=SIZE_COLOR)
     date_added = models.DateTimeField(auto_now_add=True, null=True)
     gender = models.CharField(max_length=10, choices=GENDERS, default='Unisex')
 
@@ -65,9 +71,26 @@ class ProductVariant(models.Model):
     quantity = models.IntegerField(default=1,null=False)
     purchased = models.PositiveIntegerField(default=0, null=False, blank=True)
 
+    def clean(self):
+        if (self.product.variant == Product.NONE) and (self.color or self.size):
+            raise ValidationError('This product variant should not have a color or size.')
+        else:
+            if (self.product.variant == Product.SIZE) and self.color:
+                raise ValidationError('This product variant should not have a color.')
+            if self.product.variant == Product.COLOR and self.size:
+                raise ValidationError('This product variant should not have a size.')
+
     def save(self, *args, **kwargs):
+        self.clean()
+        if not self.title:
+            self.title = self.product.name
+            if self.color and (self.product.variant == self.product.COLOR or self.product.variant == self.product.SIZE_COLOR):
+                self.title += " " + self.color.color_name
+            if self.size and (self.product.variant == self.product.SIZE or self.product.variant == self.product.SIZE_COLOR):
+                self.title += " " + self.size.size_name
         if not self.price:
             self.price = self.product.base_price
+        print(self.title)
         super().save(*args, **kwargs)
 
     def __str__(self):
