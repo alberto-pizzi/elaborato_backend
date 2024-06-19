@@ -65,6 +65,7 @@
       </div>
     </nav>
 
+      {% block filters %}
     <form method="GET" action="" class="bg-body-tertiary py-2 mt-4 rounded d-flex flex-column">
         <span class="text-center">Filter by color:</span>
         <div class="col-lg-2 justify-content-center w-100 my-2 overflow-x-auto">
@@ -73,20 +74,20 @@
                   <input type="checkbox" class="btn-check" id="btncheck_{{ color.id }}" autocomplete="off" name="color_filtered" value="{{ color.id }}" {% if color.id in applied_filters.colors %} checked {% endif %}>
                   <label class="btn btn-outline-secondary" for="btncheck_{{ color.id }}">{{ color.color_name }}</label>
                 {% endfor %}
-                
+
             </div>
         </div>
 
         <span class="text-center">Filter by price:</span>
         <div class="d-flex justify-content-center my-2">
-            
+
             <div class="col-lg-2 mx-3">
                 <div class="input-group mb-3 ">
                   <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" min="0" id="min_price" name="min_price" placeholder="Min price" value="{{ applied_filters.min_price }}">
                   <span class="input-group-text">$</span>
                 </div>
             </div>
-            
+
             <div class="col-lg-2 mx-3">
                     <div class="input-group mb-3 ">
                       <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" id="max_price" min="0" name="max_price" placeholder="Max price" value="{{ applied_filters.max_price }}">
@@ -95,13 +96,14 @@
             </div>
         </div>
 
-        
+
         <div class="d-grid gap-2 col-4 mx-auto">
             <button type="submit" class="btn btn-primary">Filter</button>
             <!-- FIXME implement remove filter button -->
             <a class="btn btn-outline-danger" href="#" role="button">Remove filters</a>
         </div>
     </form>
+          {% endblock filters %}
 
 
 
