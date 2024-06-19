@@ -98,38 +98,42 @@ document.getElementById('select-quantity').addEventListener('change', function()
     }
 });
 
-document.getElementById('select-color').addEventListener('change', function() {
-    let product_id = $(this).closest('.product_data').find('.prod_id').val();
-    let product_color = $('select#select-color').val();
-    let token = $('input[name=csrfmiddlewaretoken]').val();
-    let ajax_url = $('#update-product-url').val();
+let selectColor = document.getElementById('select-color');
+
+if (selectColor) {
+
+    selectColor.addEventListener('change', function () {
+        let product_id = $(this).closest('.product_data').find('.prod_id').val();
+        let product_color = $('select#select-color').val();
+        let token = $('input[name=csrfmiddlewaretoken]').val();
+        let ajax_url = $('#update-product-url').val();
 
 
-   $.ajax({
-       method: "POST",
-       url: ajax_url,
-       data: {
-           'prod_id': product_id,
-           'product_color_id': product_color,
-           //'product_size_id_selected': size_selected,
-           csrfmiddlewaretoken: token
-       },
-       dataType: "json",
-       success: function (response){
-           updateSizes(response);
-           updateProductPrice(response);
-           updateProductImage(response)
-           //toggleCartOptions(response, addButton);
-       },
-       error: getAjaxErrorMessage
-   });
+        $.ajax({
+            method: "POST",
+            url: ajax_url,
+            data: {
+                'prod_id': product_id,
+                'product_color_id': product_color,
+                //'product_size_id_selected': size_selected,
+                csrfmiddlewaretoken: token
+            },
+            dataType: "json",
+            success: function (response) {
+                updateSizes(response);
+                updateProductPrice(response);
+                updateProductImage(response)
+                //toggleCartOptions(response, addButton);
+            },
+            error: getAjaxErrorMessage
+        });
 
 
+    });
+}
 
-});
 
-
-function checkFilledFields(){
+function checkFilledFields(size,color){
     let radioOptions = document.getElementsByName('size');
     let radioSelected = false;
 
@@ -145,17 +149,22 @@ function checkFilledFields(){
     }
 
 
-    let selectValue = document.getElementById('select-color').value;
-    let selectSelected;
-    if (selectValue) {
-        selectSelected = selectValue !== '';
+    let select = document.getElementById('select-color');
+    if (select) {
+        let selectValue = select.value;
+        let selectSelected;
+        if (selectValue) {
+            selectSelected = selectValue !== '';
+        }
     }
 
+    console.log('size: ',radioOptions);
     if (radioOptions && !radioSelected){
         isOk = false;
     }
 
-    if (selectValue && !selectSelected){
+    console.log('color: ',select);
+    if (select && !selectSelected){
         isOk = false;
     }
 
@@ -178,7 +187,7 @@ $('.add-to-cart').click(function (e){
 
    let ajax_url = $('#ajax_url').val();
 
-   if (checkFilledFields()) {
+   if (checkFilledFields(product_size,product_color)) {
        $.ajax({
            method: "POST",
            url: ajax_url,

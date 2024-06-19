@@ -31,51 +31,58 @@ def add_to_cart(request):
 
         prod_id = int(request.POST.get('product_id'))
         quantity = int(request.POST.get('product_qty'))
-        color = int(request.POST.get('product_color'))
+        color = request.POST.get('product_color')
         size = request.POST.get('product_size')
         cart = get_or_create_cart(request)
         cart_item = None
 
         if size:
             size = int(size)
+        else:
+            size = None
 
-            if ProductVariant.objects.filter(product=prod_id, size=size, color=color).exists():
-                product = ProductVariant.objects.get(product=prod_id, size=size, color=color)
+        if color:
+            color = int(color)
+        else:
+            color = None
 
-                # TODO consider anonymous user's cart
-                cart_item = CartItem.objects.filter(cart=cart, product=product).first()
+        if ProductVariant.objects.filter(product=prod_id, size=size, color=color).exists():
+            product = ProductVariant.objects.get(product=prod_id, size=size, color=color)
 
-                # alert_class is a Bootstrap class for banner color
-                alert_class = "alert-success"
-                result_message = "Item/s added successfully"
-                error_message = "Error: quantity selected is grower than stock, available items are: "
+            # TODO consider anonymous user's cart
+            cart_item = CartItem.objects.filter(cart=cart, product=product).first()
 
-                if cart_item:
-                    if product.quantity >= (quantity + cart_item.quantity):
-                        cart_item.quantity += quantity
-                        cart_item.save()
-                    else:
-                        alert_class = "alert-danger"
-                        # the cart items are also counted
-                        result_message = (error_message + str(product.quantity) + " of which "
-                                          + str(cart_item.quantity) + " in the cart")
-                elif not cart_item:
-                    if product.quantity >= quantity:
-                        cart_item = CartItem.objects.create(cart=cart, product=product, quantity=quantity)
-                        cart_item.save()
-                    else:
-                        alert_class = "alert-danger"
-                        result_message = error_message + str(product.quantity)
-            else:
-                alert_class = "alert-danger"
-                result_message = "Product selected not found"
+            # alert_class is a Bootstrap class for banner color
+            alert_class = "alert-success"
+            result_message = "Item/s added successfully"
+            error_message = "Error: quantity selected is grower than stock, available items are: "
 
-            total_items = cart.total_items()
-            return JsonResponse({'status': 'success', 'message': 'Product/s add to cart',
-                                 'total_items': total_items,
-                                 'cart_item_quantity': cart_item.quantity if cart_item else 0,
-                                 'result_message': result_message,
-                                 'alert_class': alert_class})
+            if cart_item:
+                if product.quantity >= (quantity + cart_item.quantity):
+                    cart_item.quantity += quantity
+                    cart_item.save()
+                else:
+                    alert_class = "alert-danger"
+                    # the cart items are also counted
+                    result_message = (error_message + str(product.quantity) + " of which "
+                                      + str(cart_item.quantity) + " in the cart")
+            elif not cart_item:
+                if product.quantity >= quantity:
+                    cart_item = CartItem.objects.create(cart=cart, product=product, quantity=quantity)
+                    cart_item.save()
+                else:
+                    alert_class = "alert-danger"
+                    result_message = error_message + str(product.quantity)
+        else:
+            alert_class = "alert-danger"
+            result_message = "Product selected not found"
+
+        total_items = cart.total_items()
+        return JsonResponse({'status': 'success', 'message': 'Product/s add to cart',
+                             'total_items': total_items,
+                             'cart_item_quantity': cart_item.quantity if cart_item else 0,
+                             'result_message': result_message,
+                             'alert_class': alert_class})
 
     alert_class = "alert-warning"
     result_message = "Select all fields, please."
@@ -109,8 +116,8 @@ def get_cart_products(cart):
             'name': item.product.title,
             'price': item.product.price,
             'quantity': item.quantity,
-            'size': item.product.size.size_name,
-            'color': item.product.color.color_name
+            'size': item.product.size.size_name if item.product.size else "One size",
+            'color': item.product.color.color_name if item.product.color else "One color"
         } for item in cart_items
     ]
 
@@ -223,6 +230,7 @@ def checkout(request):
                 product = item.product
 
                 product.quantity -= item.quantity
+                product.purchased += item.quantity
                 product.save()
 
                 OrderItem.objects.create(
