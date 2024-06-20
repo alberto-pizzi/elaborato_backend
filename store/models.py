@@ -85,7 +85,7 @@ class Product(models.Model):
 class Image(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     #product=models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
-    image = models.ImageField(blank=True, upload_to='static/images/')
+    image = models.ImageField(blank=True, upload_to='images/')
 
     def __str__(self):
         return self.name
