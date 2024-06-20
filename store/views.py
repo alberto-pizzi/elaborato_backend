@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.db.models import Subquery
 from django.contrib import messages
+from django.db.models import Count,Min
 
 
 def header_data(request):
@@ -36,11 +37,25 @@ def header_data(request):
     }
     return data
 
+def group_by_color_product():
+    unique_variants = ProductVariant.objects.values('product', 'color').annotate(
+        min_id=Min('id')
+    ).values_list('min_id', flat=True)
+
+    result = ProductVariant.objects.filter(id__in=unique_variants,quantity__gt=0)
+
+    return result
+
 
 def index(request):
 
+    #products = ProductVariant.objects.filter(co)
+
+
+
+
     total_latest_shown = 6
-    products = ProductVariant.objects.select_related('product').filter(quantity__gt=0).all().order_by('-product__date_added')[:total_latest_shown]
+    products = ProductVariant.objects.select_related('product').filter(id__in=group_by_color_product()).all().order_by('-product__date_added')[:total_latest_shown]
 
     data = {
         'products': products,
@@ -167,7 +182,7 @@ def filters(request,products):
 
 
 def store_view(request, gen):
-    products = ProductVariant.objects.select_related('product').filter(Q(quantity__gt=0) & (Q(product__gender=gen) | Q(product__gender='Unisex')))
+    products = ProductVariant.objects.select_related('product').filter(Q(id__in=group_by_color_product()) & (Q(product__gender=gen) | Q(product__gender='Unisex')))
 
     colors = Color.objects.all().distinct()
     sizes = Size.objects.all().distinct()
@@ -189,7 +204,7 @@ def store_view(request, gen):
 
 def category_view(request, gen, category):
 
-    products = ProductVariant.objects.select_related('product__category', 'product').filter(Q(quantity__gt=0) & Q(product__category__category_slug=category) & (Q(product__gender=gen) | Q(product__gender='Unisex')) )
+    products = ProductVariant.objects.select_related('product__category', 'product').filter(Q(id__in=group_by_color_product()) & Q(product__category__category_slug=category) & (Q(product__gender=gen) | Q(product__gender='Unisex')) )
 
     colors = Color.objects.all().distinct()
     sizes = Size.objects.all().distinct()
@@ -229,7 +244,7 @@ def search_view(request):
                     Q(product__gender__icontains=keyword) |
                     Q(product__brand__brand_name__icontains=keyword)
                 )
-            products = ProductVariant.objects.select_related('product', 'color', 'size').filter(query_objects, quantity__gt=0).distinct()
+            products = ProductVariant.objects.select_related('product', 'color', 'size').filter(query_objects, id__in=group_by_color_product()).distinct()
         else:
             return redirect('store:home')
 
