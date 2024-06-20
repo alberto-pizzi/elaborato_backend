@@ -1,0 +1,10 @@
+.order-item-box{
+    max-width: 100px;
+    width: 100px;
+    height: auto;
+}
+
+.order-item-image{
+    width: 100%;
+    height: auto;
+}
