@@ -10,6 +10,9 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.forms import UserCreationForm
 
 
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('id','first_name_recipient','last_name_recipient','user','nickname','country','state','zip','address1','address2')
+
 class CustomUserAdmin(DefaultUserAdmin):
     #add_form = UserCreationForm
 
@@ -31,7 +34,7 @@ class CustomUserAdmin(DefaultUserAdmin):
 
 admin.site.register(CustomUser,CustomUserAdmin)
 
-admin.site.register(Address)
+admin.site.register(Address,AddressAdmin)
 admin.site.unregister(Group)
 
 

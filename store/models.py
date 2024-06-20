@@ -83,19 +83,24 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 
 class Image(models.Model):
-    name = models.CharField(max_length=50, blank=True)
-    product=models.ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, blank=True, null=True)
+    #product=models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
     image = models.ImageField(blank=True, upload_to='static/images/')
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.name:
+            self.name = self.image.name
+        super().save(*args, **kwargs)
 
 class ProductVariant(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, on_delete=models.CASCADE, blank=True, null=True)
     size = models.ForeignKey(Size, on_delete=models.CASCADE, blank=True, null=True)
-    image_id = models.ForeignKey(Image, blank=True, null=True,on_delete=models.CASCADE)
+    image_id = models.ForeignKey(Image, blank=True, null=True,on_delete=models.SET_NULL)
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     quantity = models.IntegerField(default=1,null=False)
     purchased = models.PositiveIntegerField(default=0, null=False, blank=True)
