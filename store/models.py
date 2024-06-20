@@ -5,10 +5,17 @@ from django.utils.text import slugify
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    category_slug = models.SlugField(null=False, unique=True)
+    category_slug = models.SlugField(null=True, unique=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.category_slug:
+            self.category_slug = slugify(str(self.name))
+        super().save(*args, **kwargs)
+
+
 
 class Color(models.Model):
     color_name = models.CharField(max_length=100)

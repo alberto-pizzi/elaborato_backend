@@ -7,6 +7,21 @@ from django.core.exceptions import ValidationError
 
 # Register your models here.
 
+class CategoryAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'category_slug')
+
+    fieldsets = (
+        (_('Category Info'), {'fields': ('name',)}),
+
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('name',),
+        }),
+    )
+
 class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'slug')
 
@@ -53,7 +68,7 @@ class ProductVariantAdmin(admin.ModelAdmin):
 
 admin.site.register(Product,ProductAdmin)
 admin.site.register(ProductVariant, ProductVariantAdmin)
-admin.site.register(Category)
+admin.site.register(Category,CategoryAdmin)
 admin.site.register(Color)
 admin.site.register(Size)
 admin.site.register(Image)
