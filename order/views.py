@@ -46,7 +46,7 @@ def add_to_cart(request):
             color = None
 
         if ProductVariant.objects.filter(product=prod_id, size=size, color=color).exists():
-            # FIXME warning: duplicate values
+
             product = ProductVariant.objects.get(product=prod_id, size=size, color=color)
 
             cart_item = CartItem.objects.filter(cart=cart, product=product).first()
