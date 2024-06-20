@@ -65,16 +65,31 @@
 
       {% block filters %}
     <form method="GET" action="" class="bg-body-tertiary py-2 mt-4 rounded d-flex flex-column">
+    {% if colors %}
         <span class="text-center">Filter by color:</span>
         <div class="col-lg-2 justify-content-center w-100 my-2 overflow-x-auto">
             <div class="btn-group justify-content-center" role="group" aria-label="Basic checkbox toggle button group">
                 {% for color in colors %}
-                  <input type="checkbox" class="btn-check" id="btncheck_{{ color.id }}" autocomplete="off" name="color_filtered" value="{{ color.id }}" {% if color.id in applied_filters.colors %} checked {% endif %}>
-                  <label class="btn btn-outline-secondary" for="btncheck_{{ color.id }}">{{ color.color_name }}</label>
+                  <input type="checkbox" class="btn-check" id="color_filter_{{ color.id }}" autocomplete="off" name="color_filtered" value="{{ color.id }}" {% if color.id in applied_filters.colors %} checked {% endif %}>
+                  <label class="btn btn-outline-secondary" for="color_filter_{{ color.id }}">{{ color.color_name }}</label>
                 {% endfor %}
 
             </div>
         </div>
+    {% endif %}
+    
+    {% if sizes %}
+        <span class="text-center">Filter by size:</span>
+        <div class="col-lg-2 justify-content-center w-100 my-2 overflow-x-auto">
+            <div class="btn-group justify-content-center" role="group" aria-label="Basic checkbox toggle button group">
+                {% for size in sizes %}
+                  <input type="checkbox" class="btn-check" id="size_filter_{{ size.id }}" autocomplete="off" name="size_filtered" value="{{ size.id }}" {% if size.id in applied_filters.sizes %} checked {% endif %}>
+                  <label class="btn btn-outline-secondary" for="size_filter_{{ size.id }}">{{ size.size_name }}</label>
+                {% endfor %}
+
+            </div>
+        </div>
+    {% endif %}
 
         <span class="text-center">Filter by price:</span>
         <div class="d-flex justify-content-center my-2">
