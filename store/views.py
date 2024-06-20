@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect,get_object_or_404
 
 from order.models import Cart
 # Create your views here.
-from .models import Product, Category, Size, Color,ProductVariant
+from .models import Product, Category, Size, Color, ProductVariant, Brand
 from order.views import get_or_create_cart
 from order.models import CartItem
 from django.db.models import Q
@@ -133,6 +133,7 @@ def filters(request,products):
         applied_filters['max_price'] = request.GET.get('max_price')
         applied_filters['colors'] = request.GET.getlist('color_filtered')
         applied_filters['sizes'] = request.GET.getlist('size_filtered')
+        applied_filters['brands'] = request.GET.getlist('brand_filtered')
 
         if 'reset' not in request.GET:
             if applied_filters['min_price'] and int(applied_filters['min_price']) >= 0:
@@ -153,6 +154,12 @@ def filters(request,products):
                     applied_filters['sizes'] = list(selected_sizes.values_list('id', flat=True))
                     products = products.filter(size__in=applied_filters['sizes']).distinct()
 
+            if applied_filters['brands']:
+                selected_brands = Brand.objects.filter(id__in=applied_filters['brands'])
+                if selected_brands.exists():
+                    applied_filters['brands'] = list(selected_brands.values_list('id', flat=True))
+                    products = products.filter(product__brand__in=applied_filters['brands']).distinct()
+
         return products, applied_filters
 
     return None, applied_filters
@@ -164,6 +171,7 @@ def store_view(request, gen):
 
     colors = Color.objects.all().distinct()
     sizes = Size.objects.all().distinct()
+    brands = Brand.objects.all().distinct()
 
     products,applied_filters = filters(request, products)
 
@@ -172,7 +180,8 @@ def store_view(request, gen):
         'gender': gen,
         'applied_filters': applied_filters,
         'colors': colors,
-        'sizes': sizes
+        'sizes': sizes,
+        'brands': brands
     }
 
     return render(request, 'store/store.html', data | header_data(request))
@@ -184,6 +193,7 @@ def category_view(request, gen, category):
 
     colors = Color.objects.all().distinct()
     sizes = Size.objects.all().distinct()
+    brands = Brand.objects.all().distinct()
 
     products, applied_filters = filters(request, products)
 
@@ -194,7 +204,8 @@ def category_view(request, gen, category):
         'category_name': category.capitalize(),
         'applied_filters': applied_filters,
         'colors': colors,
-        'sizes': sizes
+        'sizes': sizes,
+        'brands': brands
     }
 
     return render(request, 'store/store.html', data | header_data(request))
@@ -215,7 +226,8 @@ def search_view(request):
                     Q(color__color_name__icontains=keyword) |
                     Q(size__size_name__icontains=keyword) |
                     Q(product__category__name__icontains=keyword) |
-                    Q(product__gender__icontains=keyword)
+                    Q(product__gender__icontains=keyword) |
+                    Q(product__brand__brand_name__icontains=keyword)
                 )
             products = ProductVariant.objects.select_related('product', 'color', 'size').filter(query_objects, quantity__gt=0).distinct()
         else:

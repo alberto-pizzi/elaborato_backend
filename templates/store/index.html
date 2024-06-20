@@ -272,7 +272,7 @@
                       </a>
                           <div class="card-body">
                         <a href="{% url 'store:product-detail' gen=article.product.gender category=article.product.category.category_slug id=article.id %}">
-                      <h2 class="name-article">{{ article.product.name }} </h2>
+                      <h2 class="name-article">{{ article.product.brand.brand_name }} {{ article.product.name }} </h2>
                             </a>
                       <span class="price">{{ article.price }} $</span>
                         <div class="d-flex justify-content-between align-items-center">

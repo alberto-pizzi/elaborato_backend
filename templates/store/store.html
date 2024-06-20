@@ -65,6 +65,21 @@
 
       {% block filters %}
     <form method="GET" action="" class="bg-body-tertiary py-2 mt-4 rounded d-flex flex-column">
+    
+    {% if brands %}
+        <span class="text-center">Filter by brand:</span>
+        <div class="col-lg-2 justify-content-center w-100 my-2 overflow-x-auto">
+            <div class="btn-group justify-content-center" role="group" aria-label="Basic checkbox toggle button group">
+                {% for brand in brands %}
+                  <input type="checkbox" class="btn-check" id="brand_filter_{{ brand.id }}" autocomplete="off" name="brand_filtered" value="{{ brand.id }}" {% if brand.id in applied_filters.brands %} checked {% endif %}>
+                  <label class="btn btn-outline-secondary" for="brand_filter_{{ brand.id }}">{{ brand.brand_name }}</label>
+                {% endfor %}
+
+            </div>
+        </div>
+    {% endif %}
+    
+    
     {% if colors %}
         <span class="text-center">Filter by color:</span>
         <div class="col-lg-2 justify-content-center w-100 my-2 overflow-x-auto">

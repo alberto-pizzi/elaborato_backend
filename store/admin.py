@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product,Category, Color, ProductVariant, Size, Image
+from .models import Product,Category, Color, ProductVariant, Size, Image,Brand
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'slug')
 
-    list_display = ('id','name','category','base_price','variant','gender')
+    list_display = ('id','brand','name','category','base_price','variant','gender')
 
 
 
@@ -55,5 +55,5 @@ admin.site.register(Category)
 admin.site.register(Color)
 admin.site.register(Size)
 admin.site.register(Image)
-
+admin.site.register(Brand)
 

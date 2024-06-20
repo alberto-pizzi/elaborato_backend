@@ -23,6 +23,12 @@ class Size(models.Model):
         return self.size_name
 
 
+class Brand(models.Model):
+    brand_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.brand_name
+
 
 class Product(models.Model):
     NONE = 'None'
@@ -43,6 +49,7 @@ class Product(models.Model):
 
     name = models.CharField(max_length=255, null=False, blank=False)
     slug = models.SlugField(null=False, unique=True)
+    brand = models.ForeignKey(Brand, null=True, blank=True, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, null=False, blank=False, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
     base_price = models.DecimalField(max_digits=10, decimal_places=2, null=False,blank=False)
@@ -55,7 +62,12 @@ class Product(models.Model):
             raise ValidationError('Every product must have a category.')
 
     def __str__(self):
-        return self.name
+        if self.brand:
+            return self.brand.brand_name + " " + self.name
+        else:
+            return self.name
+
+
 
     def save(self, *args, **kwargs):
         self.clean()
