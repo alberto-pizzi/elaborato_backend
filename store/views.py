@@ -133,17 +133,18 @@ def filters(request,products):
         applied_filters['max_price'] = request.GET.get('max_price')
         applied_filters['colors'] = request.GET.getlist('color_filtered')
 
-        if applied_filters['min_price'] and int(applied_filters['min_price']) >= 0:
-            products = products.filter(price__gte=applied_filters['min_price'])
+        if 'reset' not in request.GET:
+            if applied_filters['min_price'] and int(applied_filters['min_price']) >= 0:
+                products = products.filter(price__gte=applied_filters['min_price'])
 
-        if applied_filters['max_price'] and int(applied_filters['max_price']) >= 0:
-            products = products.filter(price__lte=applied_filters['max_price'])
+            if applied_filters['max_price'] and int(applied_filters['max_price']) >= 0:
+                products = products.filter(price__lte=applied_filters['max_price'])
 
-        if applied_filters['colors']:
-            selected_colors = Color.objects.filter(id__in=applied_filters['colors'])
-            if selected_colors.exists():
-                applied_filters['colors'] = list(selected_colors.values_list('id', flat=True))
-                products = products.filter(color__in=applied_filters['colors']).distinct()
+            if applied_filters['colors']:
+                selected_colors = Color.objects.filter(id__in=applied_filters['colors'])
+                if selected_colors.exists():
+                    applied_filters['colors'] = list(selected_colors.values_list('id', flat=True))
+                    products = products.filter(color__in=applied_filters['colors']).distinct()
 
         return products, applied_filters
 
