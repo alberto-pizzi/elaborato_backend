@@ -263,6 +263,7 @@
                           <div class="image-container">
                               {% if article.image_id %}
                                 <img class="product-image" src="{{ article.image_id.image.url }}" alt="{{ article.image_id.name }}" >
+                                  <img class="product-image" src="{% static 'images/black_adidas_woman_tshirt.jpg' %}" alt="{{ article.image_id.name }}" >
                               {% else %}
                                 <span>Image not found</span>
                               {% endif %}
