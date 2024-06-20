@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Product,Category, Color, ProductVariant, Size, Image,Brand
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 
 
 # Register your models here.
@@ -46,6 +47,7 @@ class ProductVariantAdmin(admin.ModelAdmin):
             return obj.product.gender
         else:
             return "Gender not found"
+
 
 
 

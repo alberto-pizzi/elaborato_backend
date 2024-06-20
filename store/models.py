@@ -49,7 +49,7 @@ class Product(models.Model):
 
     name = models.CharField(max_length=255, null=False, blank=False)
     slug = models.SlugField(null=False, unique=True)
-    brand = models.ForeignKey(Brand, null=True, blank=True, on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, null=False, blank=False, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, null=False, blank=False, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
     base_price = models.DecimalField(max_digits=10, decimal_places=2, null=False,blank=False)
@@ -94,13 +94,20 @@ class ProductVariant(models.Model):
     purchased = models.PositiveIntegerField(default=0, null=False, blank=True)
 
     def clean(self):
-        if (self.product.variant == Product.NONE) and (self.color or self.size):
+        if (self.product.variant == Product.SIZE_COLOR) and not (self.color and self.size):
+            raise ValidationError('This product variant should have a color and size.')
+        elif (self.product.variant == Product.NONE) and (self.color or self.size):
             raise ValidationError('This product variant should not have a color or size.')
         else:
             if (self.product.variant == Product.SIZE) and self.color:
                 raise ValidationError('This product variant should not have a color.')
             if self.product.variant == Product.COLOR and self.size:
                 raise ValidationError('This product variant should not have a size.')
+        # only for new instances
+        if not self.pk:
+            if ProductVariant.objects.filter(product=self.product, size=self.size, color=self.color).exists():
+                raise ValidationError('Duplicate product variants could not exist')
+
 
     def save(self, *args, **kwargs):
         self.clean()
