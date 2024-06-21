@@ -8,6 +8,10 @@ import uuid
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from accounts.templatetags.hashid_filters import encode_id, decode_id
+from django.core.mail import EmailMultiAlternatives,send_mail
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+
 
 # Create your views here.
 from django.contrib import messages
@@ -229,6 +233,7 @@ def checkout(request):
                 )
             order.save()
 
+
             for item in cart.cartitem_set.all():
                 product = item.product
 
@@ -244,6 +249,7 @@ def checkout(request):
 
             cart.delete()
             messages.success(request, "Your order (n. " + str(order.id) + ") is placed successfully")
+            send_order_summary_by_email(order)
             return redirect('store:home')
 
         else:
@@ -293,3 +299,25 @@ def order_detail(request, id):
         data_response['order_items'] = order_items
 
     return render(request, 'order/order-detail.html', cart_info(request) | data_response)
+
+
+def send_order_summary_by_email(order):
+    recipient_email = order.shipping_email
+    subject = 'Your Order: ' + str(order.id) + ' is confirmed!'
+
+    order_items = OrderItem.objects.select_related('product').filter(order=order.id).all()
+
+    print(order_items)
+
+    data_response = {
+        'order': order,
+        'order_items': order_items
+    }
+
+    html_message = render_to_string('../templates/order/email-summary.html',data_response)
+
+    msg = EmailMultiAlternatives(subject,'',to=[recipient_email])
+    msg.attach_alternative(html_message,'text/html')
+    msg.send()
+
+
