@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.db.models import Subquery
 from django.contrib import messages
 from django.db.models import Count,Min
+from accounts.templatetags.hashid_filters import encode_id, decode_id
 
 
 def header_data(request):
@@ -46,6 +47,17 @@ def group_by_color_product():
 
     return result
 
+def encript_product(products):
+    encrypted_addresses = []
+    for product in products:
+        encrypted_id = encode_id(product.id)
+        encrypted_addresses.append({
+            'product': product,
+            'encrypted_id': encrypted_id
+        })
+
+    return encrypted_addresses
+
 
 def index(request):
 
@@ -58,7 +70,7 @@ def index(request):
     products = ProductVariant.objects.select_related('product').filter(id__in=group_by_color_product()).all().order_by('-product__date_added')[:total_latest_shown]
 
     data = {
-        'products': products,
+        'products': encript_product(products),
     }
 
     return render(request, 'store/index.html', data | header_data(request))
@@ -115,7 +127,10 @@ def update_product_info(request):
 
 
 def product_detail(request, gen, category, id):
-    product = get_object_or_404(ProductVariant, id=id)
+
+    decoded_id = decode_id(id)
+
+    product = get_object_or_404(ProductVariant, id=decoded_id)
     base_product_id = product.product.id
 
     product_colors = (ProductVariant.objects.filter(product_id=base_product_id).values('color_id').distinct())
@@ -135,6 +150,7 @@ def product_detail(request, gen, category, id):
         'colors': colors,
         'quantities': [i+1 for i in range(1, 19, 1)],
         'blocked_sizes': exclude_sizes(base_product_id,product.color),
+        'encrypted_id': id
     }
 
     return render(request, 'store/product-detail.html', data | header_data(request))
@@ -191,7 +207,7 @@ def store_view(request, gen):
     products,applied_filters = filters(request, products)
 
     data = {
-        'products': products,
+        'products': encript_product(products),
         'gender': gen,
         'applied_filters': applied_filters,
         'colors': colors,
@@ -213,7 +229,7 @@ def category_view(request, gen, category):
     products, applied_filters = filters(request, products)
 
     data = {
-        'products': products,
+        'products': encript_product(products),
         'gender': gen,
         'category_slug': category,
         'category_name': category.capitalize(),

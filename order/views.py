@@ -7,6 +7,7 @@ from django.http import JsonResponse
 import uuid
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from accounts.templatetags.hashid_filters import encode_id, decode_id
 
 # Create your views here.
 from django.contrib import messages
@@ -27,8 +28,9 @@ def get_or_create_cart(request):
 
 def add_to_cart(request):
     if request.method == 'POST':
+        encoded_id = request.POST.get('product_id')
 
-        prod_id = int(request.POST.get('product_id'))
+        prod_id = decode_id(encoded_id)
         quantity = int(request.POST.get('product_qty'))
         color = request.POST.get('product_color')
         size = request.POST.get('product_size')

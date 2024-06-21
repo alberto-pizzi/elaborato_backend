@@ -17,7 +17,7 @@
 
     <div class="row p-4 align-items-center rounded-3 border shadow-lg product_data">
         {% csrf_token %}
-        <input type="hidden" value="{{ product.product.id }}" class="prod_id">
+        <input type="hidden" value="{{ encrypted_id }}" class="prod_id">
         <input type="hidden" value="{% url 'order:add-to-cart' %}" id="ajax_url">
       <div class="col-lg-7 p-3 p-lg-4 pt-lg-3">
         <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">{{ product.product.brand.brand_name }} {{ product.product.name }}</h1>

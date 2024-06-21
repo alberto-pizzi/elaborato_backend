@@ -259,25 +259,25 @@
                   {% for article in products %}
                     <div class="col">
                   <div class="card shadow-sm">
-                      <a href="{% url 'store:product-detail' gen=article.product.gender category=article.product.category.category_slug  id=article.id %}">
+                      <a href="{% url 'store:product-detail' gen=article.product.product.gender category=article.product.product.category.category_slug  id=article.encrypted_id %}">
                           <div class="image-container">
-                              {% if article.image_id %}
-                                <img class="product-image" src="{{ article.image_id.image.url }}" alt="{{ article.image_id.name }}" >
+                              {% if article.product.image_id %}
+                                <img class="product-image" src="{{ article.product.image_id.image.url }}" alt="{{ article.product.image_id.name }}" >
                               {% else %}
                                 <span>Image not found</span>
                               {% endif %}
                           </div>
-                          
-                      
+
+
                       </a>
                           <div class="card-body">
-                        <a href="{% url 'store:product-detail' gen=article.product.gender category=article.product.category.category_slug id=article.id %}">
-                      <h2 class="name-article">{{ article.product.brand.brand_name }} {{ article.product.name }} </h2>
+                        <a href="{% url 'store:product-detail' gen=article.product.product.gender category=article.product.product.category.category_slug id=article.encrypted_id %}">
+                      <h2 class="name-article">{{ article.product.product.brand.brand_name }} {{ article.product.product.name }} </h2>
                             </a>
-                      <span class="price">{{ article.price }} $</span>
+                      <span class="price">{{ article.product.price }} $</span>
                         <div class="d-flex justify-content-between align-items-center">
-        
-                        <span>Color shown: {{ article.color.color_name }}</span>
+
+                        <span>Color shown: {{ article.product.color.color_name }}</span>
                             <div class="btn-group">
                                 
                           
