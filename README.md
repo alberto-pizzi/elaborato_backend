@@ -105,6 +105,14 @@ In tutti i form vi è una verifica (sia client-side, sia server-side) riguardant
 Tutti i campi tranne username, password ed email non hanno validazioni particolari. Viene controllato solamente che venganon inseriti (se obbligatori).
 
 
+## Gestione profilo
+
+Solo per gli utenti registrati. Dal proprio profilo è possibile modificare username, email e password come le opportune validazioni di sicurezza (client-side e server-side).
+Inoltre è possibile vedere lo storico dei propri ordini a partire dal più recente con ogni dettaglio ed il proprio stato.
+
+Gli utenti registrati possono anche gestire gli indirizzi salvati nel proprio account. Aggiungendone di nuovi, anche con dati del destinatario diverso dal dal proprietario dell'account (utile per i regali). Oppure è possibile modificarne o eliminarne gli essitenti.
+
+
 ## Admin
 
 L'admin, ovvero il venditore (in questo caso), ha accesso all'aggiunta, modifica e rimozione di prodotti e modelli ad esso collegati (come taglie, categorie ecc...)
