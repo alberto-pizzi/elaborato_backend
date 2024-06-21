@@ -124,6 +124,8 @@ Le chaivi per le impostazioni di Django e variabili che mettonon a rischio la si
 
 Nella schermata di log-in è possibile spuntare "Remember me" per allungare di molto la sessione.
 
+Alle pagine che è richiesta un'autenticazione non è possible accederci anche "forzando" la digitazione del relativo url. 
+
 
 ## Credenziali di prova
 Qui ci sono alcune credenziali di tutte le tipologie di utenti. Le credenziali sottostanti sono rilasciate (in chiaro) per facilitare la revisione.
