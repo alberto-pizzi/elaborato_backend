@@ -103,10 +103,16 @@ def exclude_sizes(prod_id,prod_color_id):
 
 def update_product_info(request):
     if request.method == 'POST':
-        prod_id = int(request.POST.get('prod_id'))
+        encoded_id = request.POST.get('prod_id')
+
+        prod_variant_id = decode_id(encoded_id)
+
+        prod_id = ProductVariant.objects.get(id=prod_variant_id).product_id
+
         prod_color_id = int(request.POST.get('product_color_id'))
 
-        new_prod = ProductVariant.objects.filter(product_id=prod_id, color_id=prod_color_id).first()
+
+        new_prod = ProductVariant.objects.filter(product=prod_id, color_id=prod_color_id).first()
         new_price = new_prod.price
 
         if new_prod.image_id:

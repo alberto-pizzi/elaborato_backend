@@ -30,7 +30,10 @@ def add_to_cart(request):
     if request.method == 'POST':
         encoded_id = request.POST.get('product_id')
 
-        prod_id = decode_id(encoded_id)
+        prod_variant_id = decode_id(encoded_id)
+
+        prod_id = ProductVariant.objects.get(id=prod_variant_id).product_id
+
         quantity = int(request.POST.get('product_qty'))
         color = request.POST.get('product_color')
         size = request.POST.get('product_size')
