@@ -1,8 +1,7 @@
-# Elaborato back-end 2024
-
-# Full Website E-commerce Store di abbigliamento con Django.
-
 # Link del sito -> https://elaborato-backend.onrender.com
+
+# Full Website E-commerce Store di abbigliamento con Django. Elaborato back-end 2024
+
 
 ## Tecnologie utilizzate
 

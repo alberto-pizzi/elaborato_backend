@@ -5,8 +5,6 @@ from .models import Cart,CartItem,Order,OrderItem
 from django.urls import reverse
 from django.utils.html import format_html
 
-admin.site.register(Cart)
-
 
 
 class OrderAdmin(admin.ModelAdmin):
