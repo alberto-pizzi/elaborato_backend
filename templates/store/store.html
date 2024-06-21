@@ -123,6 +123,18 @@
                     </div>
             </div>
         </div>
+    
+        <div class="mx-auto justify-content-center mb-3 text-center">
+            <label class="text-center" for="order_by">Order by:</label>
+            <select class="form-select" name="order_by" id="order_by">
+                <option value="" {% if applied_filters.order_by == '' %}selected{% endif %}></option>
+                <option value="price_asc" {% if applied_filters.order_by == 'price_asc' %}selected{% endif %}>Price: lowest first</option>
+                <option value="price_desc" {% if applied_filters.order_by == 'price_desc' %}selected{% endif %}>Price: highest first</option>
+                <option value="name_asc" {% if applied_filters.order_by == 'name_asc' %}selected{% endif %}>Name: A-Z</option>
+                <option value="name_desc" {% if applied_filters.order_by == 'name_desc' %}selected{% endif %}>Name: Z-A</option>
+            </select>
+            
+        </div>
 
 
         <div class="d-grid gap-2 col-4 mx-auto">

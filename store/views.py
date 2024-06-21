@@ -171,8 +171,10 @@ def filters(request,products):
         applied_filters['colors'] = request.GET.getlist('color_filtered')
         applied_filters['sizes'] = request.GET.getlist('size_filtered')
         applied_filters['brands'] = request.GET.getlist('brand_filtered')
+        applied_filters['order_by'] = request.GET.get('order_by','')
 
         if 'reset' not in request.GET:
+
             if applied_filters['min_price'] and int(applied_filters['min_price']) >= 0:
                 products = products.filter(price__gte=applied_filters['min_price'])
 
@@ -196,6 +198,19 @@ def filters(request,products):
                 if selected_brands.exists():
                     applied_filters['brands'] = list(selected_brands.values_list('id', flat=True))
                     products = products.filter(product__brand__in=applied_filters['brands']).distinct()
+
+            if applied_filters['order_by']:
+                if str(applied_filters['order_by']) == 'price_asc':
+                    products = products.order_by('price')
+                elif str(applied_filters['order_by']) == 'price_desc':
+                    products = products.order_by('-price')
+                elif str(applied_filters['order_by']) == 'name_asc':
+                    products = products.order_by('title')
+                elif str(applied_filters['order_by']) == 'name_desc':
+                    products = products.order_by('-title')
+
+        else:
+            applied_filters['order_by'] = ''
 
         return products, applied_filters
 
