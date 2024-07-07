@@ -286,7 +286,7 @@ def search_view(request):
             return redirect('store:home')
 
         data = {
-            'products': products,
+            'products': encript_product(products),
             'searched': searched
         }
 
